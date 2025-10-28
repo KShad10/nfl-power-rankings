@@ -351,7 +351,17 @@
             // Calculate responsive dimensions
             const container = canvas.parentElement;
             const containerWidth = container.clientWidth - 40;
-            const aspectRatio = 1200 / 1400;
+            
+            // Use different aspect ratios based on screen size
+            let aspectRatio;
+            if (window.innerWidth <= 768) {
+                // Mobile: make it much taller
+                aspectRatio = 1800 / 1400;
+            } else {
+                // Desktop: original aspect ratio
+                aspectRatio = 1200 / 1400;
+            }
+            
             const logicalWidth = Math.min(1400, containerWidth);
             const logicalHeight = logicalWidth * aspectRatio;
             
@@ -391,7 +401,15 @@
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             
-            const padding = {top: 50, right: 60, bottom: 50, left: 60};
+            // Adjust padding and font sizes for mobile
+            const isMobile = window.innerWidth <= 768;
+            const padding = isMobile 
+                ? {top: 40, right: 40, bottom: 40, left: 40}
+                : {top: 50, right: 60, bottom: 50, left: 60};
+            const rankFontSize = isMobile ? '12px' : '16px';
+            const weekFontSize = isMobile ? '12px' : '16px';
+            const rankLabelOffset = isMobile ? 25 : 35;
+            
             const chartWidth = logicalWidth - padding.left - padding.right;
             const chartHeight = logicalHeight - padding.top - padding.bottom;
             
@@ -416,13 +434,13 @@
                 
                 // Rank labels (left)
                 ctx.fillStyle = '#aaa';
-                ctx.font = '16px Arial';
+                ctx.font = rankFontSize + ' Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(i, padding.left - 35, y + 4);
+                ctx.fillText(i, padding.left - rankLabelOffset, y + 4);
                 
                 // Rank labels (right)
                 ctx.textAlign = 'center';
-                ctx.fillText(i, logicalWidth - padding.right + 35, y + 4);
+                ctx.fillText(i, logicalWidth - padding.right + rankLabelOffset, y + 4);
             }
             
             // Vertical grid lines (weeks)
@@ -436,9 +454,9 @@
                 
                 // Week labels at top
                 ctx.fillStyle = '#fff';
-                ctx.font = 'bold 16px Arial';
+                ctx.font = 'bold ' + weekFontSize + ' Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(`Week ${week}`, x, padding.top - 30);
+                ctx.fillText(`Week ${week}`, x, padding.top - (isMobile ? 20 : 30));
             });
             
             // Draw all team lines
@@ -451,7 +469,10 @@
         function drawTeamLine(team, highlighted = false) {
             const logicalWidth = canvas.logicalWidth;
             const logicalHeight = canvas.logicalHeight;
-            const padding = {top: 50, right: 60, bottom: 50, left: 60};
+            const isMobile = window.innerWidth <= 768;
+            const padding = isMobile 
+                ? {top: 40, right: 40, bottom: 40, left: 40}
+                : {top: 50, right: 60, bottom: 50, left: 60};
             const chartWidth = logicalWidth - padding.left - padding.right;
             const chartHeight = logicalHeight - padding.top - padding.bottom;
             
@@ -481,8 +502,22 @@
             
             // Draw logos at data points with improved overlap handling
             const logoAlpha = hasHighlights ? (highlighted ? 1 : 0.2) : 1;
+            
+            // Scale logo size based on screen width
+            let baseLogoSize, highlightedLogoSize;
+            if (window.innerWidth <= 480) {
+                baseLogoSize = 20;
+                highlightedLogoSize = 28;
+            } else if (window.innerWidth <= 768) {
+                baseLogoSize = 24;
+                highlightedLogoSize = 32;
+            } else {
+                baseLogoSize = 36;
+                highlightedLogoSize = 48;
+            }
+            
+            const logoSize = highlighted ? highlightedLogoSize : baseLogoSize;
             ctx.globalAlpha = logoAlpha;
-            const logoSize = highlighted ? 48 : 36;
             
             if (teamLogos[team]) {
                 data.forEach((rank, i) => {
@@ -505,9 +540,9 @@
                         const indexInGroup = sortedTeams.indexOf(team);
                         const totalInGroup = sortedTeams.length;
                         
-                        // Spread horizontally and vertically with increased spacing
-                        const spreadX = 12;
-                        const spreadY = 25;
+                        // Spread horizontally and vertically - adjust for mobile
+                        const spreadX = isMobile ? 8 : 12;
+                        const spreadY = isMobile ? 18 : 25;
                         
                         if (totalInGroup === 2) {
                             xOffset = (indexInGroup - 0.5) * spreadX;
@@ -674,7 +709,10 @@
                 const x = (e.clientX - rect.left) * scaleX;
                 const y = (e.clientY - rect.top) * scaleY;
                 
-                const padding = {top: 50, right: 60, bottom: 50, left: 60};
+                const isMobile = window.innerWidth <= 768;
+                const padding = isMobile 
+                    ? {top: 40, right: 40, bottom: 40, left: 40}
+                    : {top: 50, right: 60, bottom: 50, left: 60};
                 const chartWidth = logicalWidth - padding.left - padding.right;
                 const chartHeight = logicalHeight - padding.top - padding.bottom;
                 
@@ -697,8 +735,8 @@
                             const indexInGroup = sortedTeams.indexOf(team);
                             const totalInGroup = sortedTeams.length;
                             
-                            const spreadX = 12;
-                            const spreadY = 15;
+                            const spreadX = isMobile ? 8 : 12;
+                            const spreadY = isMobile ? 18 : 15;
                             
                             if (totalInGroup === 2) {
                                 xOffset = (indexInGroup - 0.5) * spreadX;
@@ -716,7 +754,20 @@
                         
                         const logoX = baseX + xOffset;
                         const logoY = baseY + yOffset;
-                        const logoSize = highlightedTeams.has(team) ? 36 : 28;
+                        
+                        // Use same logo size logic as drawing
+                        let baseLogoSize, highlightedLogoSize;
+                        if (window.innerWidth <= 480) {
+                            baseLogoSize = 20;
+                            highlightedLogoSize = 28;
+                        } else if (window.innerWidth <= 768) {
+                            baseLogoSize = 24;
+                            highlightedLogoSize = 32;
+                        } else {
+                            baseLogoSize = 36;
+                            highlightedLogoSize = 48;
+                        }
+                        const logoSize = highlightedTeams.has(team) ? highlightedLogoSize : baseLogoSize;
                         
                         if (Math.abs(x - logoX) < logoSize/2 && Math.abs(y - logoY) < logoSize/2) {
                             highlightTeam(team);
