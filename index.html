@@ -181,6 +181,51 @@
             color: #aaa;
             margin: 0 auto;
         }
+        
+        @media (max-width: 1200px) {
+            .legend {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .title {
+                font-size: 28px;
+                padding: 10px 20px;
+            }
+            
+            .subtitle {
+                font-size: 14px;
+            }
+            
+            .chart-container {
+                padding: 15px;
+            }
+            
+            .legend {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 22px;
+                padding: 8px 15px;
+            }
+            
+            .subtitle {
+                font-size: 12px;
+            }
+            
+            .legend {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -303,16 +348,24 @@
             canvas = document.getElementById('chart');
             ctx = canvas.getContext('2d');
             
+            // Calculate responsive dimensions
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth - 40;
+            const aspectRatio = 1200 / 1400;
+            const logicalWidth = Math.min(1400, containerWidth);
+            const logicalHeight = logicalWidth * aspectRatio;
+            
             // Set canvas size with device pixel ratio for sharper rendering
             const dpr = window.devicePixelRatio || 1;
-            const logicalWidth = 1400;
-            const logicalHeight = 1200;
-            
             canvas.width = logicalWidth * dpr;
             canvas.height = logicalHeight * dpr;
             canvas.style.width = logicalWidth + 'px';
             canvas.style.height = logicalHeight + 'px';
             ctx.scale(dpr, dpr);
+            
+            // Store dimensions for use in other functions
+            canvas.logicalWidth = logicalWidth;
+            canvas.logicalHeight = logicalHeight;
             
             // Enable image smoothing for better logo quality
             ctx.imageSmoothingEnabled = true;
@@ -329,8 +382,8 @@
         }
         
         function drawChart() {
-            const logicalWidth = 1400;
-            const logicalHeight = 1200;
+            const logicalWidth = canvas.logicalWidth;
+            const logicalHeight = canvas.logicalHeight;
             
             ctx.clearRect(0, 0, logicalWidth, logicalHeight);
             
@@ -396,8 +449,8 @@
         }
         
         function drawTeamLine(team, highlighted = false) {
-            const logicalWidth = 1400;
-            const logicalHeight = 1200;
+            const logicalWidth = canvas.logicalWidth;
+            const logicalHeight = canvas.logicalHeight;
             const padding = {top: 50, right: 60, bottom: 50, left: 60};
             const chartWidth = logicalWidth - padding.left - padding.right;
             const chartHeight = logicalHeight - padding.top - padding.bottom;
@@ -534,6 +587,7 @@
         
         function createLegend() {
             const legend = document.getElementById('legend');
+            legend.innerHTML = '';
             
             // Get Week 9 rankings
             const week9Rankings = rankings[9];
@@ -602,13 +656,18 @@
         
         preloadLogos();
         
+        // Add resize handler
+        window.addEventListener('resize', () => {
+            initChart();
+        });
+        
         // Add click detection on canvas
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('chart');
-            const logicalWidth = 1400;
-            const logicalHeight = 1200;
             
             canvas.addEventListener('click', (e) => {
+                const logicalWidth = canvas.logicalWidth;
+                const logicalHeight = canvas.logicalHeight;
                 const rect = canvas.getBoundingClientRect();
                 const scaleX = logicalWidth / rect.width;
                 const scaleY = logicalHeight / rect.height;
