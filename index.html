@@ -223,7 +223,41 @@
             }
             
             .legend {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px 6px;
+            }
+            
+            .division-section {
+                gap: 6px;
+            }
+            
+            .division-header {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+            
+            .legend-item {
+                min-height: 40px;
+                padding: 6px 8px 6px 10px;
+                padding-right: 30px;
+            }
+            
+            .legend-item img {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .legend-item .team-name {
+                font-size: 11px;
+            }
+            
+            .legend-item .team-record {
+                font-size: 10px;
+            }
+            
+            .legend-item .rank-badge {
+                font-size: 9px;
+                padding: 1px 4px;
             }
         }
     </style>
