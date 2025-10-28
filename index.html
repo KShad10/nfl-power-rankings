@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaddydaddy's NFL Power Rankings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            background: #ffff00;
+            color: black;
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #aaa;
+            margin-top: 10px;
+        }
+        
+        .chart-container {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        canvas {
+            display: block;
+            max-width: 100%;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+        
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 20px 10px;
+            margin-top: 30px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .division-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .division-header {
+            padding: 8px 12px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #ffff00;
+            background: #333;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .division-header:hover {
+            background: #444;
+            border: 2px solid #ffff00;
+        }
+        
+        .legend-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            padding: 8px 10px 8px 12px;
+            padding-right: 35px;
+            background: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            position: relative;
+            min-height: 50px;
+        }
+        
+        .legend-item:hover {
+            background: #444;
+            border-color: #ffff00;
+        }
+        
+        .legend-item.active {
+            border-color: #ffff00;
+            background: #444;
+        }
+        
+        .legend-item img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        
+        .legend-item .team-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .legend-item .team-name {
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        
+        .legend-item .team-record {
+            font-size: 11px;
+            color: #aaa;
+        }
+        
+        .legend-item .rank-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #ffff00;
+            color: #000;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .controls {
+            display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #aaa;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Shaddydaddy's NFL Power Rankings Progression</div>
+            <div class="subtitle">Weeks 2-9 • 2025 Season</div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="loading" id="loading">Loading team logos...</div>
+            <canvas id="chart" style="display: none;"></canvas>
+        </div>
+        
+        <div class="legend" id="legend"></div>
+    </div>
+
+    <script>
+        const LOGO_BASE = './';
+        
+        const rankings = {
+            2: ['BUF','LAC','BAL','PHI','GB','KC','LAR','TB','ATL','ARI','SF','MIN','DET','LV','WAS','IND','DAL','PIT','SEA','DEN','HOU','NYJ','CIN','JAX','CHI','NE','CAR','NYG','CLE','MIA','NO','TEN'],
+            3: ['BUF','LAC','BAL','GB','PHI','TB','DET','IND','LAR','KC','DEN','SF','WAS','ARI','SEA','HOU','MIN','CIN','ATL','DAL','NE','PIT','LV','NYG','JAX','CHI','NYJ','CLE','CAR','NO','TEN','MIA'],
+            4: ['LAC','BUF','PHI','DET','LAR','TB','IND','BAL','GB','SEA','SF','WAS','MIN','KC','DEN','ARI','CLE','CHI','PIT','NE','JAX','HOU','ATL','DAL','CIN','LV','CAR','NYJ','NYG','MIA','TEN','NO'],
+            5: ['BUF','PHI','DET','LAR','LAC','IND','TB','KC','SEA','GB','DEN','BAL','NE','PIT','JAX','SF','CHI','HOU','MIN','ARI','DAL','ATL','WAS','NYG','CLE','LV','CIN','CAR','MIA','NYJ','NO','TEN'],
+            6: ['DET','BUF','IND','PHI','LAR','TB','SEA','GB','KC','DEN','LAC','SF','NE','JAX','HOU','PIT','DAL','CHI','MIN','WAS','ATL','BAL','ARI','CLE','NO','CAR','LV','NYG','CIN','MIA','TEN','NYJ'],
+            7: ['IND','TB','SEA','BUF','KC','DET','LAR','GB','LAC','DEN','NE','PHI','SF','HOU','PIT','JAX','ATL','CHI','DAL','MIN','WAS','ARI','BAL','NO','CAR','LV','CLE','NYG','CIN','MIA','TEN','NYJ'],
+            8: ['IND','KC','DET','LAR','BUF','PHI','GB','TB','SEA','NE','SF','DEN','LAC','DAL','CHI','JAX','PIT','HOU','ARI','ATL','MIN','WAS','BAL','NO','CAR','CLE','NYG','CIN','LV','MIA','TEN','NYJ'],
+            9: ['IND','KC','DET','BUF','LAR','PHI','GB','TB','SEA','NE','LAC','DEN','SF','JAX','DAL','HOU','CHI','PIT','BAL','ARI','ATL','WAS','MIN','CAR','CIN','CLE','NO','LV','MIA','NYG','NYJ','TEN']
+        };
+        
+        const teamNames = {
+            'ARI': 'Cardinals', 'ATL': 'Falcons', 'BAL': 'Ravens', 'BUF': 'Bills',
+            'CAR': 'Panthers', 'CHI': 'Bears', 'CIN': 'Bengals', 'CLE': 'Browns',
+            'DAL': 'Cowboys', 'DEN': 'Broncos', 'DET': 'Lions', 'GB': 'Packers',
+            'HOU': 'Texans', 'IND': 'Colts', 'JAX': 'Jaguars', 'KC': 'Chiefs',
+            'LAC': 'Chargers', 'LAR': 'Rams', 'LV': 'Raiders', 'MIA': 'Dolphins',
+            'MIN': 'Vikings', 'NE': 'Patriots', 'NO': 'Saints', 'NYG': 'Giants',
+            'NYJ': 'Jets', 'PHI': 'Eagles', 'PIT': 'Steelers', 'SEA': 'Seahawks',
+            'SF': '49ers', 'TB': 'Buccaneers', 'TEN': 'Titans', 'WAS': 'Commanders'
+        };
+        
+        const teamColors = {
+            'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D',
+            'CAR': '#0085CA', 'CHI': '#C83803', 'CIN': '#FB4F14', 'CLE': '#311D00',
+            'DAL': '#003594', 'DEN': '#FB4F14', 'DET': '#0076B6', 'GB': '#203731',
+            'HOU': '#03202F', 'IND': '#002C5F', 'JAX': '#006778', 'KC': '#E31837',
+            'LAC': '#0080C6', 'LAR': '#003594', 'LV': '#000000', 'MIA': '#008E97',
+            'MIN': '#4F2683', 'NE': '#002244', 'NO': '#D3BC8D', 'NYG': '#0B2265',
+            'NYJ': '#125740', 'PHI': '#004C54', 'PIT': '#FFB612', 'SEA': '#002244',
+            'SF': '#AA0000', 'TB': '#D50A0A', 'TEN': '#0C2340', 'WAS': '#5A1414'
+        };
+        
+        const divisions = {
+            'AFC East': ['BUF', 'MIA', 'NE', 'NYJ'],
+            'AFC North': ['BAL', 'CIN', 'CLE', 'PIT'],
+            'AFC South': ['HOU', 'IND', 'JAX', 'TEN'],
+            'AFC West': ['DEN', 'KC', 'LAC', 'LV'],
+            'NFC East': ['DAL', 'NYG', 'PHI', 'WAS'],
+            'NFC North': ['CHI', 'DET', 'GB', 'MIN'],
+            'NFC South': ['ATL', 'CAR', 'NO', 'TB'],
+            'NFC West': ['ARI', 'LAR', 'SEA', 'SF']
+        };
+        
+        const standingsRecords = {
+            'BUF': '5-2', 'MIA': '2-6', 'NE': '6-2', 'NYJ': '1-7',
+            'BAL': '2-5', 'CIN': '3-5', 'CLE': '2-6', 'PIT': '4-3',
+            'HOU': '3-4', 'IND': '7-1', 'JAX': '4-3', 'TEN': '1-7',
+            'DEN': '6-2', 'KC': '5-3', 'LAC': '5-3', 'LV': '2-5',
+            'DAL': '3-4-1', 'NYG': '2-6', 'PHI': '6-2', 'WAS': '3-5',
+            'CHI': '4-3', 'DET': '5-2', 'GB': '5-1-1', 'MIN': '3-4',
+            'ATL': '3-4', 'CAR': '4-4', 'NO': '1-7', 'TB': '6-2',
+            'ARI': '2-5', 'LAR': '5-2', 'SEA': '5-2', 'SF': '5-3'
+        };
+        
+        const divisionsByStandings = {
+            'AFC East': ['NE', 'BUF', 'MIA', 'NYJ'],
+            'AFC North': ['PIT', 'CIN', 'BAL', 'CLE'],
+            'AFC South': ['IND', 'JAX', 'HOU', 'TEN'],
+            'AFC West': ['DEN', 'LAC', 'KC', 'LV'],
+            'NFC East': ['PHI', 'DAL', 'WAS', 'NYG'],
+            'NFC North': ['GB', 'DET', 'CHI', 'MIN'],
+            'NFC South': ['TB', 'CAR', 'ATL', 'NO'],
+            'NFC West': ['SEA', 'LAR', 'SF', 'ARI']
+        };
+        
+        const weeks = [2, 3, 4, 5, 6, 7, 8, 9];
+        let highlightedTeams = new Set();
+        let canvas, ctx;
+        let chartData = {};
+        let teamLogos = {};
+        let imagesLoaded = 0;
+        const totalImages = Object.keys(teamNames).length;
+        
+        function preloadLogos() {
+            Object.keys(teamNames).forEach(team => {
+                const img = new Image();
+                img.onload = () => {
+                    teamLogos[team] = img;
+                    imagesLoaded++;
+                    if (imagesLoaded === totalImages) {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('chart').style.display = 'block';
+                        initChart();
+                    }
+                };
+                img.onerror = () => {
+                    imagesLoaded++;
+                    if (imagesLoaded === totalImages) {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('chart').style.display = 'block';
+                        initChart();
+                    }
+                };
+                img.src = `${LOGO_BASE}${team}.png`;
+            });
+        }
+        
+        function initChart() {
+            canvas = document.getElementById('chart');
+            ctx = canvas.getContext('2d');
+            
+            // Set canvas size with device pixel ratio for sharper rendering
+            const dpr = window.devicePixelRatio || 1;
+            const logicalWidth = 1400;
+            const logicalHeight = 1200;
+            
+            canvas.width = logicalWidth * dpr;
+            canvas.height = logicalHeight * dpr;
+            canvas.style.width = logicalWidth + 'px';
+            canvas.style.height = logicalHeight + 'px';
+            ctx.scale(dpr, dpr);
+            
+            // Enable image smoothing for better logo quality
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            
+            Object.keys(teamNames).forEach(team => {
+                chartData[team] = weeks.map(week => {
+                    return rankings[week].indexOf(team) + 1;
+                });
+            });
+            
+            drawChart();
+            createLegend();
+        }
+        
+        function drawChart() {
+            const logicalWidth = 1400;
+            const logicalHeight = 1200;
+            
+            ctx.clearRect(0, 0, logicalWidth, logicalHeight);
+            
+            // Ensure image smoothing is enabled
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            
+            const padding = {top: 50, right: 60, bottom: 50, left: 60};
+            const chartWidth = logicalWidth - padding.left - padding.right;
+            const chartHeight = logicalHeight - padding.top - padding.bottom;
+            
+            // Draw grid
+            ctx.lineWidth = 1;
+            
+            // Horizontal grid lines (rankings)
+            const gridRanks = [1, 7, 13, 19, 25, 32];
+            gridRanks.forEach(rank => {
+                const y = padding.top + ((rank - 1) / 31) * chartHeight;
+                ctx.strokeStyle = '#3a3a3a';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(logicalWidth - padding.right, y);
+                ctx.stroke();
+            });
+            
+            // Rank labels (all ranks 1-32)
+            for (let i = 1; i <= 32; i++) {
+                const y = padding.top + ((i - 1) / 31) * chartHeight;
+                
+                // Rank labels (left)
+                ctx.fillStyle = '#aaa';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(i, padding.left - 35, y + 4);
+                
+                // Rank labels (right)
+                ctx.textAlign = 'center';
+                ctx.fillText(i, logicalWidth - padding.right + 35, y + 4);
+            }
+            
+            // Vertical grid lines (weeks)
+            ctx.strokeStyle = '#3a3a3a';
+            weeks.forEach((week, i) => {
+                const x = padding.left + (i / (weeks.length - 1)) * chartWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, padding.top);
+                ctx.lineTo(x, logicalHeight - padding.bottom);
+                ctx.stroke();
+                
+                // Week labels at top
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Week ${week}`, x, padding.top - 30);
+            });
+            
+            // Draw all team lines
+            Object.keys(chartData).forEach(team => {
+                const isHighlighted = highlightedTeams.has(team);
+                drawTeamLine(team, isHighlighted);
+            });
+        }
+        
+        function drawTeamLine(team, highlighted = false) {
+            const logicalWidth = 1400;
+            const logicalHeight = 1200;
+            const padding = {top: 50, right: 60, bottom: 50, left: 60};
+            const chartWidth = logicalWidth - padding.left - padding.right;
+            const chartHeight = logicalHeight - padding.top - padding.bottom;
+            
+            const data = chartData[team];
+            const color = teamColors[team];
+            
+            // Adjust opacity based on highlighting
+            const hasHighlights = highlightedTeams.size > 0;
+            const lineAlpha = hasHighlights ? (highlighted ? 1 : 0.15) : 0.3;
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = highlighted ? 4 : 2;
+            ctx.globalAlpha = lineAlpha;
+            
+            ctx.beginPath();
+            data.forEach((rank, i) => {
+                const x = padding.left + (i / (weeks.length - 1)) * chartWidth;
+                const y = padding.top + ((rank - 1) / 31) * chartHeight;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            
+            // Draw logos at data points with improved overlap handling
+            const logoAlpha = hasHighlights ? (highlighted ? 1 : 0.2) : 1;
+            ctx.globalAlpha = logoAlpha;
+            const logoSize = highlighted ? 48 : 36;
+            
+            if (teamLogos[team]) {
+                data.forEach((rank, i) => {
+                    const baseX = padding.left + (i / (weeks.length - 1)) * chartWidth;
+                    const baseY = padding.top + ((rank - 1) / 31) * chartHeight;
+                    
+                    // Find teams at same rank in same week
+                    const week = weeks[i];
+                    const teamsAtRank = rankings[week].filter((t, idx) => idx === rank - 1);
+                    const teamsAtSameRank = Object.keys(chartData).filter(t => 
+                        chartData[t][i] === rank
+                    );
+                    
+                    // Calculate offset based on position among overlapping teams
+                    let xOffset = 0;
+                    let yOffset = 0;
+                    
+                    if (teamsAtSameRank.length > 1) {
+                        const sortedTeams = teamsAtSameRank.sort();
+                        const indexInGroup = sortedTeams.indexOf(team);
+                        const totalInGroup = sortedTeams.length;
+                        
+                        // Spread horizontally and vertically with increased spacing
+                        const spreadX = 12;
+                        const spreadY = 25;
+                        
+                        if (totalInGroup === 2) {
+                            xOffset = (indexInGroup - 0.5) * spreadX;
+                            yOffset = (indexInGroup - 0.5) * spreadY;
+                        } else if (totalInGroup === 3) {
+                            xOffset = (indexInGroup - 1) * spreadX;
+                            yOffset = (indexInGroup - 1) * spreadY;
+                        } else {
+                            // For 4+ teams, arrange in a grid pattern
+                            const col = indexInGroup % 2;
+                            const row = Math.floor(indexInGroup / 2);
+                            xOffset = (col - 0.5) * spreadX * 1.5;
+                            yOffset = (row - (totalInGroup / 4)) * spreadY * 2.0;
+                        }
+                    }
+                    
+                    ctx.drawImage(
+                        teamLogos[team],
+                        baseX - logoSize / 2 + xOffset,
+                        baseY - logoSize / 2 + yOffset,
+                        logoSize,
+                        logoSize
+                    );
+                });
+            }
+            
+            ctx.globalAlpha = 1;
+        }
+        
+        function highlightDivision(divisionName) {
+            const divisionTeams = divisionsByStandings[divisionName];
+            
+            // Check if all division teams are already highlighted
+            const allHighlighted = divisionTeams.every(team => highlightedTeams.has(team));
+            
+            if (allHighlighted) {
+                // Remove all division teams from highlights
+                divisionTeams.forEach(team => highlightedTeams.delete(team));
+            } else {
+                // Add all division teams to highlights
+                divisionTeams.forEach(team => highlightedTeams.add(team));
+            }
+            
+            drawChart();
+            
+            // Update legend
+            document.querySelectorAll('.legend-item').forEach(item => {
+                item.classList.toggle('active', highlightedTeams.has(item.dataset.team));
+            });
+        }
+        
+        function highlightTeam(team) {
+            if (highlightedTeams.has(team)) {
+                highlightedTeams.delete(team);
+            } else {
+                highlightedTeams.add(team);
+            }
+            drawChart();
+            
+            // Update legend
+            document.querySelectorAll('.legend-item').forEach(item => {
+                item.classList.toggle('active', highlightedTeams.has(item.dataset.team));
+            });
+        }
+        
+        function highlightAll() {
+            highlightedTeams.clear();
+            drawChart();
+            document.querySelectorAll('.legend-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+        
+        function clearHighlight() {
+            highlightAll();
+        }
+        
+        function createLegend() {
+            const legend = document.getElementById('legend');
+            
+            // Get Week 9 rankings
+            const week9Rankings = rankings[9];
+            
+            Object.keys(divisionsByStandings).forEach(divisionName => {
+                // Create division section container
+                const divisionSection = document.createElement('div');
+                divisionSection.className = 'division-section';
+                
+                // Create division header
+                const divisionHeader = document.createElement('div');
+                divisionHeader.className = 'division-header';
+                divisionHeader.textContent = divisionName;
+                
+                // Add click handler for division header
+                divisionHeader.addEventListener('click', () => {
+                    highlightDivision(divisionName);
+                });
+                
+                divisionSection.appendChild(divisionHeader);
+                
+                // Add teams in this division (ordered by standings)
+                divisionsByStandings[divisionName].forEach(team => {
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+                    item.dataset.team = team;
+                    
+                    if (teamLogos[team]) {
+                        const img = document.createElement('img');
+                        img.src = teamLogos[team].src;
+                        item.appendChild(img);
+                    }
+                    
+                    const teamInfo = document.createElement('div');
+                    teamInfo.className = 'team-info';
+                    
+                    const teamName = document.createElement('div');
+                    teamName.className = 'team-name';
+                    teamName.textContent = teamNames[team];
+                    teamInfo.appendChild(teamName);
+                    
+                    const teamRecord = document.createElement('div');
+                    teamRecord.className = 'team-record';
+                    teamRecord.textContent = standingsRecords[team];
+                    teamInfo.appendChild(teamRecord);
+                    
+                    item.appendChild(teamInfo);
+                    
+                    // Add power ranking badge
+                    const currentRank = week9Rankings.indexOf(team) + 1;
+                    const rankBadge = document.createElement('div');
+                    rankBadge.className = 'rank-badge';
+                    rankBadge.textContent = `#${currentRank}`;
+                    item.appendChild(rankBadge);
+                    
+                    item.addEventListener('click', () => {
+                        highlightTeam(team);
+                    });
+                    
+                    divisionSection.appendChild(item);
+                });
+                
+                legend.appendChild(divisionSection);
+            });
+        }
+        
+        preloadLogos();
+        
+        // Add click detection on canvas
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('chart');
+            const logicalWidth = 1400;
+            const logicalHeight = 1200;
+            
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = logicalWidth / rect.width;
+                const scaleY = logicalHeight / rect.height;
+                const x = (e.clientX - rect.left) * scaleX;
+                const y = (e.clientY - rect.top) * scaleY;
+                
+                const padding = {top: 50, right: 60, bottom: 50, left: 60};
+                const chartWidth = logicalWidth - padding.left - padding.right;
+                const chartHeight = logicalHeight - padding.top - padding.bottom;
+                
+                Object.keys(chartData).forEach(team => {
+                    chartData[team].forEach((rank, i) => {
+                        const baseX = padding.left + (i / (weeks.length - 1)) * chartWidth;
+                        const baseY = padding.top + ((rank - 1) / 31) * chartHeight;
+                        
+                        // Calculate same offset as in drawing
+                        const week = weeks[i];
+                        const teamsAtSameRank = Object.keys(chartData).filter(t => 
+                            chartData[t][i] === rank
+                        );
+                        
+                        let xOffset = 0;
+                        let yOffset = 0;
+                        
+                        if (teamsAtSameRank.length > 1) {
+                            const sortedTeams = teamsAtSameRank.sort();
+                            const indexInGroup = sortedTeams.indexOf(team);
+                            const totalInGroup = sortedTeams.length;
+                            
+                            const spreadX = 12;
+                            const spreadY = 15;
+                            
+                            if (totalInGroup === 2) {
+                                xOffset = (indexInGroup - 0.5) * spreadX;
+                                yOffset = (indexInGroup - 0.5) * spreadY;
+                            } else if (totalInGroup === 3) {
+                                xOffset = (indexInGroup - 1) * spreadX;
+                                yOffset = (indexInGroup - 1) * spreadY;
+                            } else {
+                                const col = indexInGroup % 2;
+                                const row = Math.floor(indexInGroup / 2);
+                                xOffset = (col - 0.5) * spreadX * 1.5;
+                                yOffset = (row - (totalInGroup / 4)) * spreadY * 1.5;
+                            }
+                        }
+                        
+                        const logoX = baseX + xOffset;
+                        const logoY = baseY + yOffset;
+                        const logoSize = highlightedTeams.has(team) ? 36 : 28;
+                        
+                        if (Math.abs(x - logoX) < logoSize/2 && Math.abs(y - logoY) < logoSize/2) {
+                            highlightTeam(team);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
