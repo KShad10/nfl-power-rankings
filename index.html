@@ -74,7 +74,7 @@
         
         .legend {
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px 10px;
             margin-top: 30px;
             max-width: 1400px;
@@ -83,13 +83,12 @@
         }
         
         .division-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
         
         .division-header {
-            grid-column: 1 / -1;
             padding: 8px 12px;
             font-weight: bold;
             font-size: 14px;
@@ -197,6 +196,7 @@
         @media (max-width: 1200px) {
             .legend {
                 grid-template-columns: repeat(4, 1fr);
+                gap: 15px 8px;
             }
         }
         
@@ -238,13 +238,12 @@
             }
             
             .legend {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
                 gap: 10px 6px;
             }
             
             .division-section {
                 gap: 6px;
-                grid-template-columns: 1fr 1fr;
             }
             
             .division-header {
@@ -252,7 +251,6 @@
                 font-size: 12px;
                 background: #2d5016;
                 color: #f5e6d3;
-                grid-column: 1 / -1;
             }
             
             .legend-item {
