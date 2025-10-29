@@ -106,6 +106,11 @@
             border-color: #c8553d;
         }
         
+        .division-header.active {
+            background: #c8553d;
+            border-color: #2d5016;
+        }
+        
         .legend-item {
             display: flex;
             flex-direction: row;
@@ -133,7 +138,8 @@
         .legend-item.active {
             border-color: #c8553d;
             background: #faf6f0;
-            box-shadow: 0 3px 8px rgba(200, 85, 61, 0.2);
+            box-shadow: 0 4px 10px rgba(200, 85, 61, 0.4);
+            transform: translateY(-1px);
         }
         
         .legend-item img {
@@ -173,12 +179,71 @@
             position: absolute;
             top: 4px;
             right: 4px;
-            background: #c8553d;
             color: #ffffff;
             font-size: 10px;
             font-weight: bold;
             padding: 2px 5px;
             border-radius: 3px;
+        }
+        
+        .legend-item .rank-badge.tier-elite {
+            background: #2d5016;
+        }
+        
+        .legend-item .rank-badge.tier-good {
+            background: #4a7c24;
+        }
+        
+        .legend-item .rank-badge.tier-average {
+            background: #c8553d;
+        }
+        
+        .legend-item .rank-badge.tier-below {
+            background: #8b4513;
+        }
+        
+        .legend-item .rank-badge.tier-bottom {
+            background: #6b705c;
+        }
+        
+        .instructions {
+            text-align: center;
+            font-size: 14px;
+            color: #6b705c;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .clear-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #c8553d;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            border: none;
+            font-size: 14px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .clear-button.visible {
+            display: block;
+        }
+        
+        .clear-button:hover {
+            background: #d4634e;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .clear-button:active {
+            transform: translateY(0);
         }
         
         .controls {
@@ -295,10 +360,21 @@
             .legend-item .rank-badge {
                 font-size: 7px;
                 padding: 1px 2px;
-                background: #c8553d;
                 color: #ffffff;
                 top: 2px;
                 right: 2px;
+            }
+            
+            .instructions {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+            
+            .clear-button {
+                padding: 10px 20px;
+                font-size: 12px;
+                bottom: 15px;
+                right: 15px;
             }
         }
     </style>
@@ -315,14 +391,17 @@
             <canvas id="chart" style="display: none;"></canvas>
         </div>
         
+        <div class="instructions">Click teams or division headers to highlight • Double-click chart to clear</div>
         <div class="legend" id="legend"></div>
+        
+        <button class="clear-button" id="clearButton">Clear All</button>
     </div>
 
     <script>
         const LOGO_BASE = './';
         
         const rankings = {
-            1: ['BUF','LAC','BAL','ATL','TB','KC','NE','MIN','PHI','ARI','CHI','WAS','LV','CIN','DET','DEN','IND','SEA','HOU','DAL','PIT','GB','SF','LAR','CAR','TEN','JAX','CLE','NYJ','NO','MIA','NYG'],
+            1: ['BUF','LAC','BAL','PHI','KC','ATL','TB','NE','MIN','CHI','DET','ARI','WAS','LV','CIN','SEA','DEN','IND','HOU','GB','SF','DAL','PIT','LAR','CAR','TEN','JAX','CLE','NYJ','NO','MIA','NYG'],
             2: ['BUF','LAC','BAL','PHI','GB','KC','LAR','TB','ATL','ARI','SF','MIN','DET','LV','WAS','IND','DAL','PIT','SEA','DEN','HOU','NYJ','CIN','JAX','CHI','NE','CAR','NYG','CLE','MIA','NO','TEN'],
             3: ['BUF','LAC','BAL','GB','PHI','TB','DET','IND','LAR','KC','DEN','SF','WAS','ARI','SEA','HOU','MIN','CIN','ATL','DAL','NE','PIT','LV','NYG','JAX','CHI','NYJ','CLE','CAR','NO','TEN','MIA'],
             4: ['LAC','BUF','PHI','DET','LAR','TB','IND','BAL','GB','SEA','SF','WAS','MIN','KC','DEN','ARI','CLE','CHI','PIT','NE','JAX','HOU','ATL','DAL','CIN','LV','CAR','NYJ','NYG','MIA','TEN','NO'],
@@ -663,11 +742,7 @@
             }
             
             drawChart();
-            
-            // Update legend
-            document.querySelectorAll('.legend-item').forEach(item => {
-                item.classList.toggle('active', highlightedTeams.has(item.dataset.team));
-            });
+            updateLegendAndUI();
         }
         
         function highlightTeam(team) {
@@ -677,23 +752,48 @@
                 highlightedTeams.add(team);
             }
             drawChart();
-            
-            // Update legend
-            document.querySelectorAll('.legend-item').forEach(item => {
-                item.classList.toggle('active', highlightedTeams.has(item.dataset.team));
-            });
+            updateLegendAndUI();
         }
         
         function highlightAll() {
             highlightedTeams.clear();
             drawChart();
-            document.querySelectorAll('.legend-item').forEach(item => {
-                item.classList.remove('active');
-            });
+            updateLegendAndUI();
         }
         
         function clearHighlight() {
             highlightAll();
+        }
+        
+        function updateLegendAndUI() {
+            // Update legend items
+            document.querySelectorAll('.legend-item').forEach(item => {
+                item.classList.toggle('active', highlightedTeams.has(item.dataset.team));
+            });
+            
+            // Update division headers
+            document.querySelectorAll('.division-header').forEach(header => {
+                const divisionName = header.textContent;
+                const divTeams = divisionsByStandings[divisionName];
+                const anyHighlighted = divTeams?.some(t => highlightedTeams.has(t));
+                header.classList.toggle('active', anyHighlighted);
+            });
+            
+            // Show/hide clear button
+            const clearButton = document.getElementById('clearButton');
+            if (highlightedTeams.size > 0) {
+                clearButton.classList.add('visible');
+            } else {
+                clearButton.classList.remove('visible');
+            }
+        }
+        
+        function getRankTier(rank) {
+            if (rank <= 8) return 'tier-elite';
+            if (rank <= 16) return 'tier-good';
+            if (rank <= 24) return 'tier-average';
+            if (rank <= 28) return 'tier-below';
+            return 'tier-bottom';
         }
         
         function createLegend() {
@@ -750,7 +850,7 @@
                     // Add power ranking badge
                     const currentRank = week9Rankings.indexOf(team) + 1;
                     const rankBadge = document.createElement('div');
-                    rankBadge.className = 'rank-badge';
+                    rankBadge.className = `rank-badge ${getRankTier(currentRank)}`;
                     rankBadge.textContent = `#${currentRank}`;
                     item.appendChild(rankBadge);
                     
@@ -767,6 +867,9 @@
         
         preloadLogos();
         
+        // Clear button handler
+        document.getElementById('clearButton').addEventListener('click', clearHighlight);
+        
         // Add resize handler
         window.addEventListener('resize', () => {
             initChart();
@@ -775,6 +878,9 @@
         // Add click detection on canvas
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('chart');
+            
+            // Double-click to clear highlights
+            canvas.addEventListener('dblclick', clearHighlight);
             
             canvas.addEventListener('click', (e) => {
                 const logicalWidth = canvas.logicalWidth;
