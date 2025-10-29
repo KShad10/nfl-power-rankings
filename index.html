@@ -808,6 +808,12 @@
                 document.getElementById('rankings-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[0].classList.add('active');
                 window.location.hash = 'rankings';
+                // Force chart redraw after tab becomes visible
+                setTimeout(() => {
+                    if (canvas && ctx) {
+                        drawChart();
+                    }
+                }, 50);
             } else {
                 document.getElementById('predictions-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[1].classList.add('active');
