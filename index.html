@@ -1023,27 +1023,28 @@
             const chartWidth = logicalWidth - padding.left - padding.right;
             const chartHeight = logicalHeight - padding.top - padding.bottom;
             
-            // Draw white background
+            // Draw white background with rounded corners
             ctx.fillStyle = '#ffffff';
-            const boxMargin = 20; // Tight border around labels
+            const boxMargin = 20;
             const weekLabelHeight = isMobile ? 20 : 30;
+            const borderRadius = 10; // Adjust this for more/less rounding
 
-            ctx.fillRect(
-                padding.left - rankLabelOffset - boxMargin,  // Start before left labels
-                padding.top - weekLabelHeight - boxMargin,   // Start before week labels
-                chartWidth + (2 * rankLabelOffset) + (2 * boxMargin),  // Include both sides
-                chartHeight + weekLabelHeight + boxMargin    // Include top labels
-            );
+            const boxX = padding.left - rankLabelOffset - boxMargin;
+            const boxY = padding.top - weekLabelHeight - boxMargin;
+            const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin);
+            const boxHeight = chartHeight + weekLabelHeight + boxMargin;
 
-            // Draw red border (same dimensions)
+            // Fill rounded rectangle
+            ctx.beginPath();
+            ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
+            ctx.fill();
+
+            // Draw red border with rounded corners
             ctx.strokeStyle = '#c8553d';
             ctx.lineWidth = 3;
-            ctx.strokeRect(
-                padding.left - rankLabelOffset - boxMargin,
-                padding.top - weekLabelHeight - boxMargin,
-                chartWidth + (2 * rankLabelOffset) + (2 * boxMargin),
-                chartHeight + weekLabelHeight + boxMargin
-            );
+            ctx.beginPath();
+            ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
+            ctx.stroke();
             
             const gridRanks = [1, 7, 13, 19, 25, 32];
             gridRanks.forEach(rank => {
