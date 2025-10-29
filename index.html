@@ -978,9 +978,11 @@
             } else {
                 aspectRatio = 800 / 800;
             }
+            // Add extra space for the extended box
+            const extraSpace = 60; // Adjust based on your boxMargin
             
-            const logicalWidth = Math.min(800, containerWidth);
-            const logicalHeight = logicalWidth * aspectRatio;
+            const logicalWidth = Math.min(800, containerWidth) + extraSpace;
+            const logicalHeight = (logicalWidth - extraSpace) * aspectRatio + extraSpace;
             
             const dpr = window.devicePixelRatio || 1;
             canvas.width = logicalWidth * dpr;
