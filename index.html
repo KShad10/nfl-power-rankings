@@ -301,13 +301,13 @@
         .predictions-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 10px;
         }
 
         .division-card {
             background: #ffffff;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 2px solid #c8553d;
         }
@@ -380,6 +380,7 @@
             border-radius: 3px;
             font-size: 9px;
             font-weight: bold;
+            white-space: nowrap;
         }
 
         .status-ahead {
@@ -498,6 +499,11 @@
 
             .predictions-row {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .division-card {
+                padding: 8px;
             }
 
             .division-card-title {
@@ -505,13 +511,18 @@
             }
 
             .pred-table th, .pred-table td {
-                padding: 5px 3px;
+                padding: 5px 2px;
                 font-size: 10px;
             }
 
             .pred-table .team-logo {
                 width: 18px;
                 height: 18px;
+            }
+
+            .status-badge {
+                font-size: 8px;
+                padding: 2px 4px;
             }
         }
         
@@ -606,7 +617,7 @@
             }
 
             .division-card {
-                padding: 10px;
+                padding: 8px;
             }
 
             .division-card-title {
@@ -615,8 +626,8 @@
             }
 
             .status-badge {
-                font-size: 8px;
-                padding: 1px 4px;
+                font-size: 7px;
+                padding: 1px 3px;
             }
         }
     </style>
@@ -823,7 +834,7 @@
             
             const maxPossibleWins = current.wins + gamesRemaining;
             if (maxPossibleWins < predicted.wins) {
-                return {class: 'eliminated', badge: 'way-behind', text: 'Way Behind'};
+                return {class: 'eliminated', badge: 'way-behind', text: 'Off Track'};
             }
             
             if (diff >= 2) {
