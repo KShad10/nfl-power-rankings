@@ -52,6 +52,42 @@
             margin-top: 5px;
             font-weight: 500;
         }
+
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background: #ffffff;
+            color: #2d5016;
+            border: 2px solid #c8553d;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            background: #f5e6d3;
+        }
+
+        .tab-button.active {
+            background: #2d5016;
+            color: #f5e6d3;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
         
         .chart-container {
             background: #ffffff;
@@ -245,10 +281,6 @@
             transform: translateY(0);
         }
         
-        .controls {
-            display: none;
-        }
-        
         .loading {
             text-align: center;
             padding: 40px;
@@ -256,11 +288,180 @@
             color: #6b705c;
             margin: 0 auto;
         }
+
+        /* Predictions Table Styles */
+        .predictions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .conference-section {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 2px solid #c8553d;
+        }
+
+        .conference-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f5e6d3;
+            border-radius: 5px;
+        }
+
+        .division-table {
+            margin-bottom: 25px;
+        }
+
+        .division-table:last-child {
+            margin-bottom: 0;
+        }
+
+        .division-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f5e6d3;
+            background: #2d5016;
+            padding: 8px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .pred-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .pred-table th {
+            background: #2d5016;
+            color: #f5e6d3;
+            padding: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #c8553d;
+        }
+
+        .pred-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ede0c8;
+            font-size: 13px;
+        }
+
+        .pred-table tr.playoff-team {
+            background: #d4edda;
+        }
+
+        .pred-table tr.on-track {
+            background: #d1f2eb;
+        }
+
+        .pred-table tr.behind-pace {
+            background: #fff3cd;
+        }
+
+        .pred-table tr.ahead-pace {
+            background: #cfe2ff;
+        }
+
+        .pred-table tr.eliminated {
+            background: #f8d7da;
+        }
+
+        .pred-table .rank-col {
+            font-weight: bold;
+            color: #2d5016;
+            font-size: 14px;
+        }
+
+        .pred-table .team-logo {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .status-ahead {
+            background: #0dcaf0;
+            color: #000;
+        }
+
+        .status-on-track {
+            background: #198754;
+            color: #fff;
+        }
+
+        .status-behind {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .status-way-behind {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .legend-predictions {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 2px solid #c8553d;
+        }
+
+        .legend-predictions h3 {
+            text-align: center;
+            color: #2d5016;
+            margin-bottom: 10px;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .legend-pred-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1px solid #2d5016;
+        }
         
         @media (max-width: 1200px) {
             .legend {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 10px 6px;
+            }
+
+            .predictions-grid {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -276,6 +477,11 @@
             }
             
             .subtitle {
+                font-size: 14px;
+            }
+
+            .tab-button {
+                padding: 10px 20px;
                 font-size: 14px;
             }
             
@@ -302,6 +508,24 @@
                 width: 22px;
                 height: 22px;
             }
+
+            .conference-title {
+                font-size: 20px;
+            }
+
+            .division-name {
+                font-size: 16px;
+            }
+
+            .pred-table th, .pred-table td {
+                padding: 6px 4px;
+                font-size: 11px;
+            }
+
+            .pred-table .team-logo {
+                width: 20px;
+                height: 20px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -312,6 +536,16 @@
             }
             
             .subtitle {
+                font-size: 12px;
+            }
+
+            .tab-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .tab-button {
+                padding: 8px 15px;
                 font-size: 12px;
             }
             
@@ -373,23 +607,84 @@
                 bottom: 15px;
                 right: 15px;
             }
+
+            .pred-table th, .pred-table td {
+                padding: 4px 2px;
+                font-size: 10px;
+            }
+
+            .pred-table .team-logo {
+                width: 16px;
+                height: 16px;
+            }
+
+            .conference-section {
+                padding: 15px;
+            }
+
+            .conference-title {
+                font-size: 18px;
+                padding: 8px;
+            }
+
+            .division-name {
+                font-size: 14px;
+                padding: 6px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="title">Shaddydaddy's NFL Power Rankings Progression</div>
-            <div class="subtitle">Weeks 1-9 • 2025 Season</div>
+            <div class="title">Shaddydaddy's NFL Power Rankings</div>
+            <div class="subtitle">2025 Season</div>
         </div>
-        
-        <div class="chart-container">
-            <div class="loading" id="loading">Loading team logos...</div>
-            <canvas id="chart" style="display: none;"></canvas>
+
+        <div class="tab-container">
+            <button class="tab-button active" onclick="switchTab('rankings')">Power Rankings Progression</button>
+            <button class="tab-button" onclick="switchTab('predictions')">Preseason Predictions vs Standings</button>
         </div>
-        
-        <div class="instructions">Click teams or division headers to highlight • Double-click chart to clear</div>
-        <div class="legend" id="legend"></div>
+
+        <div id="rankings-tab" class="tab-content active">
+            <div class="chart-container">
+                <div class="loading" id="loading">Loading team logos...</div>
+                <canvas id="chart" style="display: none;"></canvas>
+            </div>
+            
+            <div class="instructions">Click teams or division headers to highlight • Double-click chart to clear</div>
+            <div class="legend" id="legend"></div>
+        </div>
+
+        <div id="predictions-tab" class="tab-content">
+            <div class="predictions-grid" id="predictions-grid"></div>
+            
+            <div class="legend-predictions">
+                <h3>Status Key</h3>
+                <div class="legend-items">
+                    <div class="legend-pred-item">
+                        <div class="legend-color-box" style="background: #d4edda;"></div>
+                        <span>Predicted Playoff Team</span>
+                    </div>
+                    <div class="legend-pred-item">
+                        <div class="legend-color-box" style="background: #cfe2ff;"></div>
+                        <span>Ahead of Pace</span>
+                    </div>
+                    <div class="legend-pred-item">
+                        <div class="legend-color-box" style="background: #d1f2eb;"></div>
+                        <span>On Track</span>
+                    </div>
+                    <div class="legend-pred-item">
+                        <div class="legend-color-box" style="background: #fff3cd;"></div>
+                        <span>Behind Pace</span>
+                    </div>
+                    <div class="legend-pred-item">
+                        <div class="legend-color-box" style="background: #f8d7da;"></div>
+                        <span>Way Behind / Eliminated</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <button class="clear-button" id="clearButton">Clear All</button>
     </div>
@@ -463,6 +758,42 @@
             'NFC South': ['TB', 'CAR', 'ATL', 'NO'],
             'NFC West': ['SEA', 'LAR', 'SF', 'ARI']
         };
+
+        // Preseason predictions
+        const predictions = {
+            'BUF': {rank: 1, wins: 14, losses: 3, divWins: 6, divLosses: 0},
+            'LAC': {rank: 2, wins: 13, losses: 4, divWins: 3, divLosses: 3},
+            'BAL': {rank: 3, wins: 13, losses: 4, divWins: 4, divLosses: 2},
+            'IND': {rank: 4, wins: 9, losses: 8, divWins: 3, divLosses: 3},
+            'KC': {rank: 5, wins: 11, losses: 6, divWins: 5, divLosses: 1},
+            'NE': {rank: 6, wins: 11, losses: 6, divWins: 4, divLosses: 2},
+            'LV': {rank: 7, wins: 10, losses: 7, divWins: 3, divLosses: 3},
+            'CIN': {rank: 8, wins: 10, losses: 7, divWins: 4, divLosses: 2},
+            'DEN': {rank: 9, wins: 9, losses: 8, divWins: 1, divLosses: 5},
+            'HOU': {rank: 10, wins: 8, losses: 9, divWins: 4, divLosses: 2},
+            'PIT': {rank: 11, wins: 7, losses: 10, divWins: 3, divLosses: 3},
+            'TEN': {rank: 12, wins: 6, losses: 11, divWins: 3, divLosses: 3},
+            'JAX': {rank: 13, wins: 5, losses: 12, divWins: 2, divLosses: 4},
+            'CLE': {rank: 14, wins: 4, losses: 13, divWins: 1, divLosses: 5},
+            'NYJ': {rank: 15, wins: 3, losses: 14, divWins: 1, divLosses: 5},
+            'MIA': {rank: 16, wins: 2, losses: 15, divWins: 1, divLosses: 5},
+            'ATL': {rank: 1, wins: 13, losses: 4, divWins: 4, divLosses: 2},
+            'MIN': {rank: 2, wins: 11, losses: 6, divWins: 4, divLosses: 2},
+            'PHI': {rank: 3, wins: 11, losses: 6, divWins: 4, divLosses: 2},
+            'ARI': {rank: 4, wins: 11, losses: 6, divWins: 5, divLosses: 1},
+            'TB': {rank: 5, wins: 12, losses: 5, divWins: 3, divLosses: 3},
+            'CHI': {rank: 6, wins: 11, losses: 6, divWins: 3, divLosses: 3},
+            'WAS': {rank: 7, wins: 11, losses: 6, divWins: 4, divLosses: 2},
+            'DET': {rank: 8, wins: 10, losses: 7, divWins: 3, divLosses: 3},
+            'SEA': {rank: 9, wins: 9, losses: 8, divWins: 4, divLosses: 2},
+            'CAR': {rank: 10, wins: 9, losses: 8, divWins: 4, divLosses: 2},
+            'DAL': {rank: 11, wins: 8, losses: 9, divWins: 3, divLosses: 3},
+            'GB': {rank: 12, wins: 7, losses: 10, divWins: 2, divLosses: 4},
+            'SF': {rank: 13, wins: 7, losses: 10, divWins: 3, divLosses: 3},
+            'NO': {rank: 14, wins: 3, losses: 14, divWins: 1, divLosses: 5},
+            'NYG': {rank: 15, wins: 2, losses: 15, divWins: 1, divLosses: 5},
+            'LAR': {rank: 16, wins: 2, losses: 15, divWins: 0, divLosses: 6}
+        };
         
         const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         let highlightedTeams = new Set();
@@ -471,6 +802,139 @@
         let teamLogos = {};
         let imagesLoaded = 0;
         const totalImages = Object.keys(teamNames).length;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            
+            if (tabName === 'rankings') {
+                document.getElementById('rankings-tab').classList.add('active');
+                document.querySelectorAll('.tab-button')[0].classList.add('active');
+            } else {
+                document.getElementById('predictions-tab').classList.add('active');
+                document.querySelectorAll('.tab-button')[1].classList.add('active');
+                renderPredictions();
+            }
+        }
+
+        function parseRecord(recordStr) {
+            const parts = recordStr.split('-');
+            const wins = parseInt(parts[0]);
+            const losses = parseInt(parts[1]);
+            const ties = parts.length > 2 ? parseInt(parts[2]) : 0;
+            return {wins, losses, ties};
+        }
+
+        function getStatus(team, current, predicted) {
+            const gamesPlayed = current.wins + current.losses + current.ties;
+            const gamesRemaining = 17 - gamesPlayed;
+            
+            const currentWinPct = (current.wins + current.ties * 0.5) / gamesPlayed;
+            const projectedWins = current.wins + (gamesRemaining * currentWinPct);
+            const diff = projectedWins - predicted.wins;
+            
+            // Check if mathematically eliminated from prediction
+            const maxPossibleWins = current.wins + gamesRemaining;
+            if (maxPossibleWins < predicted.wins) {
+                return {class: 'eliminated', badge: 'way-behind', text: 'Eliminated'};
+            }
+            
+            if (diff >= 2) {
+                return {class: 'ahead-pace', badge: 'ahead', text: 'Ahead'};
+            } else if (diff >= -1 && diff < 2) {
+                return {class: 'on-track', badge: 'on-track', text: 'On Track'};
+            } else if (diff >= -3 && diff < -1) {
+                return {class: 'behind-pace', badge: 'behind', text: 'Behind'};
+            } else {
+                return {class: 'eliminated', badge: 'way-behind', text: 'Way Behind'};
+            }
+        }
+
+        function renderPredictions() {
+            const grid = document.getElementById('predictions-grid');
+            grid.innerHTML = '';
+
+            const conferences = {
+                'AFC': {
+                    'AFC East': ['BUF', 'NE', 'NYJ', 'MIA'],
+                    'AFC West': ['LAC', 'KC', 'LV', 'DEN'],
+                    'AFC North': ['BAL', 'CIN', 'PIT', 'CLE'],
+                    'AFC South': ['IND', 'HOU', 'TEN', 'JAX']
+                },
+                'NFC': {
+                    'NFC South': ['ATL', 'TB', 'CAR', 'NO'],
+                    'NFC North': ['MIN', 'CHI', 'DET', 'GB'],
+                    'NFC East': ['PHI', 'WAS', 'DAL', 'NYG'],
+                    'NFC West': ['ARI', 'SEA', 'SF', 'LAR']
+                }
+            };
+
+            Object.keys(conferences).forEach(conf => {
+                const confSection = document.createElement('div');
+                confSection.className = 'conference-section';
+                
+                const confTitle = document.createElement('div');
+                confTitle.className = 'conference-title';
+                confTitle.textContent = conf;
+                confSection.appendChild(confTitle);
+
+                Object.keys(conferences[conf]).forEach(divName => {
+                    const divTable = document.createElement('div');
+                    divTable.className = 'division-table';
+                    
+                    const divHeader = document.createElement('div');
+                    divHeader.className = 'division-name';
+                    divHeader.textContent = divName;
+                    divTable.appendChild(divHeader);
+                    
+                    const table = document.createElement('table');
+                    table.className = 'pred-table';
+                    
+                    const thead = document.createElement('thead');
+                    thead.innerHTML = `
+                        <tr>
+                            <th>Rank</th>
+                            <th>Team</th>
+                            <th>Predicted</th>
+                            <th>Current</th>
+                            <th>Status</th>
+                        </tr>
+                    `;
+                    table.appendChild(thead);
+                    
+                    const tbody = document.createElement('tbody');
+                    
+                    conferences[conf][divName].forEach(team => {
+                        const pred = predictions[team];
+                        const current = parseRecord(standingsRecords[team]);
+                        const status = getStatus(team, current, pred);
+                        const isPlayoffTeam = pred.wins >= 10; // Simplified playoff criteria
+                        
+                        const tr = document.createElement('tr');
+                        tr.className = isPlayoffTeam ? 'playoff-team' : status.class;
+                        
+                        tr.innerHTML = `
+                            <td class="rank-col">${pred.rank}</td>
+                            <td>
+                                <img src="${LOGO_BASE}${team}.png" class="team-logo" alt="${team}">
+                                ${team}
+                            </td>
+                            <td>${pred.wins}-${pred.losses}</td>
+                            <td>${standingsRecords[team]}</td>
+                            <td><span class="status-badge status-${status.badge}">${status.text}</span></td>
+                        `;
+                        
+                        tbody.appendChild(tr);
+                    });
+                    
+                    table.appendChild(tbody);
+                    divTable.appendChild(table);
+                    confSection.appendChild(divTable);
+                });
+                
+                grid.appendChild(confSection);
+            });
+        }
         
         function preloadLogos() {
             Object.keys(teamNames).forEach(team => {
@@ -500,24 +964,19 @@
             canvas = document.getElementById('chart');
             ctx = canvas.getContext('2d');
             
-            // Calculate responsive dimensions
             const container = canvas.parentElement;
             const containerWidth = container.clientWidth - 40;
             
-            // Use different aspect ratios based on screen size
             let aspectRatio;
             if (window.innerWidth <= 768) {
-                // Mobile: make it much taller for better vertical spacing
                 aspectRatio = 2400 / 1400;
             } else {
-                // Desktop: original aspect ratio
                 aspectRatio = 1200 / 1400;
             }
             
             const logicalWidth = Math.min(1400, containerWidth);
             const logicalHeight = logicalWidth * aspectRatio;
             
-            // Set canvas size with device pixel ratio for sharper rendering
             const dpr = window.devicePixelRatio || 1;
             canvas.width = logicalWidth * dpr;
             canvas.height = logicalHeight * dpr;
@@ -525,11 +984,9 @@
             canvas.style.height = logicalHeight + 'px';
             ctx.scale(dpr, dpr);
             
-            // Store dimensions for use in other functions
             canvas.logicalWidth = logicalWidth;
             canvas.logicalHeight = logicalHeight;
             
-            // Enable image smoothing for better logo quality
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             
@@ -549,11 +1006,9 @@
             
             ctx.clearRect(0, 0, logicalWidth, logicalHeight);
             
-            // Ensure image smoothing is enabled
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             
-            // Adjust padding and font sizes for mobile
             const isMobile = window.innerWidth <= 768;
             const padding = isMobile 
                 ? {top: 40, right: 40, bottom: 40, left: 40}
@@ -565,10 +1020,8 @@
             const chartWidth = logicalWidth - padding.left - padding.right;
             const chartHeight = logicalHeight - padding.top - padding.bottom;
             
-            // Draw grid
             ctx.lineWidth = 1;
             
-            // Horizontal grid lines (rankings)
             const gridRanks = [1, 7, 13, 19, 25, 32];
             gridRanks.forEach(rank => {
                 const y = padding.top + ((rank - 1) / 31) * chartHeight;
@@ -580,22 +1033,18 @@
                 ctx.stroke();
             });
             
-            // Rank labels (all ranks 1-32)
             for (let i = 1; i <= 32; i++) {
                 const y = padding.top + ((i - 1) / 31) * chartHeight;
                 
-                // Rank labels (left)
                 ctx.fillStyle = '#000000';
                 ctx.font = rankFontSize + ' Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText(i, padding.left - rankLabelOffset, y + 4);
                 
-                // Rank labels (right)
                 ctx.textAlign = 'center';
                 ctx.fillText(i, logicalWidth - padding.right + rankLabelOffset, y + 4);
             }
             
-            // Week labels at top
             weeks.forEach((week, i) => {
                 const x = padding.left + (i / (weeks.length - 1)) * chartWidth;
                 
@@ -605,7 +1054,6 @@
                 ctx.fillText(`${week}`, x, padding.top - (isMobile ? 20 : 30));
             });
             
-            // Draw all team lines
             Object.keys(chartData).forEach(team => {
                 const isHighlighted = highlightedTeams.has(team);
                 drawTeamLine(team, isHighlighted);
@@ -625,7 +1073,6 @@
             const data = chartData[team];
             const color = teamColors[team];
             
-            // Adjust opacity based on highlighting
             const hasHighlights = highlightedTeams.size > 0;
             const lineAlpha = hasHighlights ? (highlighted ? 1 : 0.15) : 0.3;
             
@@ -646,10 +1093,8 @@
             });
             ctx.stroke();
             
-            // Draw logos at data points with improved overlap handling
             const logoAlpha = hasHighlights ? (highlighted ? 1 : 0.2) : 1;
             
-            // Scale logo size based on screen width
             let baseLogoSize, highlightedLogoSize;
             if (window.innerWidth <= 480) {
                 baseLogoSize = 20;
@@ -670,14 +1115,12 @@
                     const baseX = padding.left + (i / (weeks.length - 1)) * chartWidth;
                     const baseY = padding.top + ((rank - 1) / 31) * chartHeight;
                     
-                    // Find teams at same rank in same week
                     const week = weeks[i];
                     const teamsAtRank = rankings[week].filter((t, idx) => idx === rank - 1);
                     const teamsAtSameRank = Object.keys(chartData).filter(t => 
                         chartData[t][i] === rank
                     );
                     
-                    // Calculate offset based on position among overlapping teams
                     let xOffset = 0;
                     let yOffset = 0;
                     
@@ -686,7 +1129,6 @@
                         const indexInGroup = sortedTeams.indexOf(team);
                         const totalInGroup = sortedTeams.length;
                         
-                        // Spread horizontally and vertically - adjust for mobile
                         const spreadX = isMobile ? 8 : 12;
                         const spreadY = isMobile ? 18 : 25;
                         
@@ -697,7 +1139,6 @@
                             xOffset = (indexInGroup - 1) * spreadX;
                             yOffset = (indexInGroup - 1) * spreadY;
                         } else {
-                            // For 4+ teams, arrange in a grid pattern
                             const col = indexInGroup % 2;
                             const row = Math.floor(indexInGroup / 2);
                             xOffset = (col - 0.5) * spreadX * 1.5;
@@ -721,14 +1162,11 @@
         function highlightDivision(divisionName) {
             const divisionTeams = divisionsByStandings[divisionName];
             
-            // Check if all division teams are already highlighted
             const allHighlighted = divisionTeams.every(team => highlightedTeams.has(team));
             
             if (allHighlighted) {
-                // Remove all division teams from highlights
                 divisionTeams.forEach(team => highlightedTeams.delete(team));
             } else {
-                // Add all division teams to highlights
                 divisionTeams.forEach(team => highlightedTeams.add(team));
             }
             
@@ -757,12 +1195,10 @@
         }
         
         function updateLegendAndUI() {
-            // Update legend items
             document.querySelectorAll('.legend-item').forEach(item => {
                 item.classList.toggle('active', highlightedTeams.has(item.dataset.team));
             });
             
-            // Update division headers
             document.querySelectorAll('.division-header').forEach(header => {
                 const divisionName = header.textContent;
                 const divTeams = divisionsByStandings[divisionName];
@@ -770,7 +1206,6 @@
                 header.classList.toggle('active', anyHighlighted);
             });
             
-            // Show/hide clear button
             const clearButton = document.getElementById('clearButton');
             if (highlightedTeams.size > 0) {
                 clearButton.classList.add('visible');
@@ -791,27 +1226,22 @@
             const legend = document.getElementById('legend');
             legend.innerHTML = '';
             
-            // Get Week 9 rankings
             const week9Rankings = rankings[9];
             
             Object.keys(divisionsByStandings).forEach(divisionName => {
-                // Create division section container
                 const divisionSection = document.createElement('div');
                 divisionSection.className = 'division-section';
                 
-                // Create division header
                 const divisionHeader = document.createElement('div');
                 divisionHeader.className = 'division-header';
                 divisionHeader.textContent = divisionName;
                 
-                // Add click handler for division header
                 divisionHeader.addEventListener('click', () => {
                     highlightDivision(divisionName);
                 });
                 
                 divisionSection.appendChild(divisionHeader);
                 
-                // Add teams in this division (ordered by standings)
                 divisionsByStandings[divisionName].forEach(team => {
                     const item = document.createElement('div');
                     item.className = 'legend-item';
@@ -838,7 +1268,6 @@
                     
                     item.appendChild(teamInfo);
                     
-                    // Add power ranking badge
                     const currentRank = week9Rankings.indexOf(team) + 1;
                     const rankBadge = document.createElement('div');
                     rankBadge.className = `rank-badge ${getRankTier(currentRank)}`;
@@ -858,19 +1287,15 @@
         
         preloadLogos();
         
-        // Clear button handler
         document.getElementById('clearButton').addEventListener('click', clearHighlight);
         
-        // Add resize handler
         window.addEventListener('resize', () => {
             initChart();
         });
         
-        // Add click detection on canvas
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('chart');
             
-            // Double-click to clear highlights
             canvas.addEventListener('dblclick', clearHighlight);
             
             canvas.addEventListener('click', (e) => {
@@ -894,7 +1319,6 @@
                         const baseX = padding.left + (i / (weeks.length - 1)) * chartWidth;
                         const baseY = padding.top + ((rank - 1) / 31) * chartHeight;
                         
-                        // Calculate same offset as in drawing
                         const week = weeks[i];
                         const teamsAtSameRank = Object.keys(chartData).filter(t => 
                             chartData[t][i] === rank
@@ -928,7 +1352,6 @@
                         const logoX = baseX + xOffset;
                         const logoY = baseY + yOffset;
                         
-                        // Use same logo size logic as drawing
                         let baseLogoSize, highlightedLogoSize;
                         if (window.innerWidth <= 480) {
                             baseLogoSize = 20;
