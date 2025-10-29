@@ -57,7 +57,7 @@
             background: #ffffff;
             border-radius: 10px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -74,10 +74,10 @@
         
         .legend {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(8, 1fr);
             gap: 12px 8px;
-            margin-top: 30px;
-            max-width: 1400px;
+            margin-top: 8px;
+            max-width: 1600px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -210,7 +210,7 @@
             text-align: center;
             font-size: 14px;
             color: #6b705c;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             font-weight: 500;
         }
         
@@ -588,7 +588,7 @@
                 const y = padding.top + ((i - 1) / 31) * chartHeight;
                 
                 // Rank labels (left)
-                ctx.fillStyle = '#6b705c';
+                ctx.fillStyle = '#000000';
                 ctx.font = rankFontSize + ' Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText(i, padding.left - rankLabelOffset, y + 4);
@@ -598,16 +598,10 @@
                 ctx.fillText(i, logicalWidth - padding.right + rankLabelOffset, y + 4);
             }
             
-            // Vertical grid lines (weeks)
-            ctx.strokeStyle = '#ede0c8';
+            // Week labels at top
             weeks.forEach((week, i) => {
                 const x = padding.left + (i / (weeks.length - 1)) * chartWidth;
-                ctx.beginPath();
-                ctx.moveTo(x, padding.top);
-                ctx.lineTo(x, logicalHeight - padding.bottom);
-                ctx.stroke();
                 
-                // Week labels at top
                 ctx.fillStyle = '#2d5016';
                 ctx.font = 'bold ' + weekFontSize + ' Arial';
                 ctx.textAlign = 'center';
