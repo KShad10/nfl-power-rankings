@@ -345,6 +345,10 @@
             font-size: 11px;
         }
 
+        .pred-table tr.playoff-team {
+            background: #e8f5e9;
+        }
+
         .pred-table tr.on-track {
             background: #d4edda;
         }
@@ -437,11 +441,6 @@
             height: 18px;
             border-radius: 3px;
             border: 1px solid #2d5016;
-        }
-
-        .playoff-asterisk {
-            color: #2d5016;
-            font-weight: bold;
         }
         
         @media (max-width: 1400px) {
@@ -634,11 +633,11 @@
         </div>
 
         <div class="tab-container">
-            <button class="tab-button" onclick="switchTab('rankings')">Power Rankings Progression</button>
+            <button class="tab-button active" onclick="switchTab('rankings')">Power Rankings Progression</button>
             <button class="tab-button" onclick="switchTab('predictions')">Preseason Predictions vs Standings</button>
         </div>
 
-        <div id="rankings-tab" class="tab-content">
+        <div id="rankings-tab" class="tab-content active">
             <div class="chart-container">
                 <div class="loading" id="loading">Loading team logos...</div>
                 <canvas id="chart" style="display: none;"></canvas>
@@ -655,8 +654,8 @@
                 <h3>Status Key</h3>
                 <div class="legend-items">
                     <div class="legend-pred-item">
-                        <span class="playoff-asterisk">*</span>
-                        <span>Predicted Playoff Team (10+ wins)</span>
+                        <div class="legend-color-box" style="background: #e8f5e9;"></div>
+                        <span>Predicted Playoff Team</span>
                     </div>
                     <div class="legend-pred-item">
                         <div class="legend-color-box" style="background: #d1ecf1;"></div>
@@ -801,21 +800,10 @@
             if (tabName === 'rankings') {
                 document.getElementById('rankings-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[0].classList.add('active');
-                window.location.hash = 'rankings';
             } else {
                 document.getElementById('predictions-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[1].classList.add('active');
-                window.location.hash = 'predictions';
                 renderPredictions();
-            }
-        }
-
-        function initializeTab() {
-            const hash = window.location.hash.substring(1);
-            if (hash === 'predictions') {
-                switchTab('predictions');
-            } else {
-                switchTab('rankings');
             }
         }
 
@@ -855,6 +843,7 @@
             const container = document.getElementById('predictions-container');
             container.innerHTML = '';
 
+            // Row 1: AFC East, AFC West, AFC North, AFC South
             const row1 = document.createElement('div');
             row1.className = 'predictions-row';
             
@@ -865,6 +854,7 @@
             
             container.appendChild(row1);
 
+            // Row 2: NFC South, NFC North, NFC East, NFC West
             const row2 = document.createElement('div');
             row2.className = 'predictions-row';
             
@@ -912,12 +902,10 @@
                 const isPlayoffTeam = pred.wins >= 10;
                 
                 const tr = document.createElement('tr');
-                tr.className = status.class;
-                
-                const rankDisplay = isPlayoffTeam ? `${pred.rank}*` : pred.rank;
+                tr.className = isPlayoffTeam ? 'playoff-team' : status.class;
                 
                 tr.innerHTML = `
-                    <td class="rank-col">${rankDisplay}</td>
+                    <td class="rank-col">${pred.rank}</td>
                     <td>
                         <img src="${LOGO_BASE}${team}.png" class="team-logo" alt="${team}">
                         ${team}
@@ -998,11 +986,6 @@
             
             drawChart();
             createLegend();
-            
-            // Initialize tab after chart is fully rendered
-            requestAnimationFrame(() => {
-                initializeTab();
-            });
         }
         
         function drawChart() {
