@@ -978,12 +978,18 @@
             } else {
                 aspectRatio = 800 / 800;
             }
-            // Add extra space for the extended box
-            const extraSpace = 80; // Increased to accommodate larger box
-
-            const logicalWidth = Math.min(800, containerWidth) + extraSpace;
-            const logicalHeight = (logicalWidth - extraSpace) * aspectRatio + extraSpace;
-
+            
+            const isMobile = window.innerWidth <= 768;
+            const weekLabelHeight = isMobile ? 20 : 30;
+            const boxMargin = 15;
+            const topExtension = weekLabelHeight + boxMargin + 10;
+            const bottomExtension = boxMargin + 10;
+            const extraHorizontal = 80; // For left/right labels
+            const extraVertical = topExtension + bottomExtension; // For top/bottom box
+            
+            const logicalWidth = Math.min(800, containerWidth) + extraHorizontal;
+            const logicalHeight = (logicalWidth - extraHorizontal) * aspectRatio + extraVertical;
+            
             const dpr = window.devicePixelRatio || 1;
             canvas.width = logicalWidth * dpr;
             canvas.height = logicalHeight * dpr;
