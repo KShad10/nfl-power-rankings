@@ -979,7 +979,7 @@
                 aspectRatio = 500 / 800;
             }
             
-            const logicalWidth = Math.min(1400, containerWidth);
+            const logicalWidth = Math.min(800, containerWidth);
             const logicalHeight = logicalWidth * aspectRatio;
             
             const dpr = window.devicePixelRatio || 1;
@@ -1108,8 +1108,8 @@
                 baseLogoSize = 24;
                 highlightedLogoSize = 32;
             } else {
-                baseLogoSize = 36;
-                highlightedLogoSize = 48;
+                baseLogoSize = 24;
+                highlightedLogoSize = 32;
             }
             
             const logoSize = highlighted ? highlightedLogoSize : baseLogoSize;
