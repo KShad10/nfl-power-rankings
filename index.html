@@ -983,7 +983,7 @@
             
             const logicalWidth = Math.min(800, containerWidth) + extraSpace;
             const logicalHeight = (logicalWidth - extraSpace) * aspectRatio + extraSpace;
-            
+
             const dpr = window.devicePixelRatio || 1;
             canvas.width = logicalWidth * dpr;
             canvas.height = logicalHeight * dpr;
@@ -1027,14 +1027,14 @@
             
             // Draw white background with rounded corners
             ctx.fillStyle = '#ffffff';
-            const boxMargin = 30;
+            const boxMargin = 15; // Keep this reasonable
             const weekLabelHeight = isMobile ? 20 : 30;
-            const borderRadius = 10; // Adjust this for more/less rounding
+            const borderRadius = 10;
 
             const boxX = padding.left - rankLabelOffset - boxMargin;
             const boxY = padding.top - weekLabelHeight - boxMargin;
             const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin);
-            const boxHeight = chartHeight + weekLabelHeight + boxMargin;
+            const boxHeight = chartHeight + weekLabelHeight + (2 * boxMargin); // Added margin at bottom
 
             // Fill rounded rectangle
             ctx.beginPath();
