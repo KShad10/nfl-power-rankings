@@ -796,9 +796,11 @@
             if (tabName === 'rankings') {
                 document.getElementById('rankings-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[0].classList.add('active');
+                window.location.hash = 'rankings';
             } else {
                 document.getElementById('predictions-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[1].classList.add('active');
+                window.location.hash = 'predictions';
                 renderPredictions();
             }
         }
@@ -943,6 +945,15 @@
                 img.src = `${LOGO_BASE}${team}.png`;
             });
         }
+        function initializePage() {
+            const hash = window.location.hash.substring(1);
+            if (hash === 'predictions') {
+                switchTab('predictions');
+            }
+        }
+
+        // Call on page load
+        window.addEventListener('load', initializePage);
         
         function initChart() {
             canvas = document.getElementById('chart');
