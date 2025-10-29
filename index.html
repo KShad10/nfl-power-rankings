@@ -658,28 +658,8 @@
             <div class="predictions-container" id="predictions-container"></div>
             
             <div class="legend-predictions">
-                <h3>Status Key</h3>
-                <div class="legend-items">
-                    <div class="legend-pred-item">
-                        <strong>*</strong>
-                        <span>= Predicted Playoff Team</span>
-                    </div>
-                    <div class="legend-pred-item">
-                        <div class="legend-color-box" style="background: #d1ecf1;"></div>
-                        <span>Ahead of Pace</span>
-                    </div>
-                    <div class="legend-pred-item">
-                        <div class="legend-color-box" style="background: #d4edda;"></div>
-                        <span>On Track</span>
-                    </div>
-                    <div class="legend-pred-item">
-                        <div class="legend-color-box" style="background: #fff3cd;"></div>
-                        <span>Behind Pace</span>
-                    </div>
-                    <div class="legend-pred-item">
-                        <div class="legend-color-box" style="background: #f8d7da;"></div>
-                        <span>Off Track</span>
-                    </div>
+                <div style="text-align: center; font-size: 14px; color: #2d5016;">
+                    * = Predicted Playoff Team
                 </div>
             </div>
         </div>
@@ -915,10 +895,9 @@
                 const isPlayoffTeam = pred.wins >= 10;
                 
                 const tr = document.createElement('tr');
-                tr.className = status.class;
-                
+
                 const rankDisplay = isPlayoffTeam ? `${pred.rank}*` : pred.rank;
-                
+
                 tr.innerHTML = `
                     <td class="rank-col">${rankDisplay}</td>
                     <td>
@@ -927,7 +906,7 @@
                     </td>
                     <td>${pred.wins}-${pred.losses}</td>
                     <td>${standingsRecords[team]}</td>
-                    <td><span class="status-badge status-${status.badge}">${status.text}</span></td>
+                    <td class="${status.class}"><span class="status-badge status-${status.badge}">${status.text}</span></td>
                 `;
                 
                 tbody.appendChild(tr);
