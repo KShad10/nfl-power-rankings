@@ -651,7 +651,7 @@
                 <div class="legend-items">
                     <div class="legend-pred-item">
                         <strong>*</strong>
-                        <span>= Predicted Playoff Team (10+ wins)</span>
+                        <span>= Predicted Playoff Team</span>
                     </div>
                     <div class="legend-pred-item">
                         <div class="legend-color-box" style="background: #d1ecf1;"></div>
@@ -667,7 +667,7 @@
                     </div>
                     <div class="legend-pred-item">
                         <div class="legend-color-box" style="background: #f8d7da;"></div>
-                        <span>Way Behind / Eliminated</span>
+                        <span>Off Track</span>
                     </div>
                 </div>
             </div>
@@ -833,7 +833,7 @@
             } else if (diff >= -3 && diff < -1) {
                 return {class: 'behind-pace', badge: 'behind', text: 'Behind'};
             } else {
-                return {class: 'eliminated', badge: 'way-behind', text: 'Way Behind'};
+                return {class: 'eliminated', badge: 'way-behind', text: 'Off Track'};
             }
         }
 
@@ -965,7 +965,7 @@
             if (window.innerWidth <= 768) {
                 aspectRatio = 2400 / 1400;
             } else {
-                aspectRatio = 1400 / 900;
+                aspectRatio = 1400 / 650;
             }
             
             const logicalWidth = Math.min(1400, containerWidth);
