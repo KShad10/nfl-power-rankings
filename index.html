@@ -75,7 +75,7 @@
         .legend {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px 10px;
+            gap: 12px 8px;
             margin-top: 30px;
             max-width: 1400px;
             margin-left: auto;
@@ -85,11 +85,11 @@
         .division-section {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
         }
         
         .division-header {
-            padding: 8px 12px;
+            padding: 6px 10px;
             font-weight: bold;
             font-size: 14px;
             color: #f5e6d3;
@@ -112,15 +112,15 @@
             align-items: center;
             justify-content: flex-start;
             gap: 8px;
-            padding: 8px 10px 8px 12px;
-            padding-right: 35px;
+            padding: 4px 8px 4px 10px;
+            padding-right: 32px;
             background: #ffffff;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.2s;
             border: 2px solid #ede0c8;
             position: relative;
-            min-height: 50px;
+            min-height: 36px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
@@ -196,7 +196,7 @@
         @media (max-width: 1200px) {
             .legend {
                 grid-template-columns: repeat(4, 1fr);
-                gap: 15px 8px;
+                gap: 10px 6px;
             }
         }
         
@@ -222,7 +222,22 @@
             
             .legend {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 15px 8px;
+                gap: 10px 6px;
+            }
+            
+            .division-section {
+                gap: 3px;
+            }
+            
+            .legend-item {
+                min-height: 34px;
+                padding: 3px 6px 3px 8px;
+                padding-right: 28px;
+            }
+            
+            .legend-item img {
+                width: 22px;
+                height: 22px;
             }
         }
         
@@ -239,31 +254,31 @@
             
             .legend {
                 grid-template-columns: 1fr;
-                gap: 10px 6px;
+                gap: 8px;
             }
             
             .division-section {
-                gap: 6px;
+                gap: 3px;
             }
             
             .division-header {
-                padding: 6px 8px;
-                font-size: 12px;
+                padding: 5px 8px;
+                font-size: 11px;
                 background: #2d5016;
                 color: #f5e6d3;
             }
             
             .legend-item {
-                min-height: 40px;
-                padding: 6px 8px 6px 10px;
-                padding-right: 30px;
+                min-height: 32px;
+                padding: 3px 6px 3px 8px;
+                padding-right: 28px;
                 background: #ffffff;
-                border: 2px solid #ede0c8;
+                border: 1px solid #ede0c8;
             }
             
             .legend-item img {
-                width: 24px;
-                height: 24px;
+                width: 20px;
+                height: 20px;
             }
             
             .legend-item .team-name {
@@ -272,13 +287,13 @@
             }
             
             .legend-item .team-record {
-                font-size: 10px;
+                font-size: 9px;
                 color: #6b705c;
             }
             
             .legend-item .rank-badge {
-                font-size: 9px;
-                padding: 1px 4px;
+                font-size: 8px;
+                padding: 1px 3px;
                 background: #c8553d;
                 color: #ffffff;
             }
@@ -289,7 +304,7 @@
     <div class="container">
         <div class="header">
             <div class="title">Shaddydaddy's NFL Power Rankings Progression</div>
-            <div class="subtitle">Weeks 2-9 • 2025 Season</div>
+            <div class="subtitle">Weeks 1-9 • 2025 Season</div>
         </div>
         
         <div class="chart-container">
@@ -304,6 +319,7 @@
         const LOGO_BASE = './';
         
         const rankings = {
+            1: ['BUF','LAC','BAL','ATL','TB','KC','NE','MIN','PHI','ARI','CHI','WAS','LV','CIN','DET','DEN','IND','SEA','HOU','DAL','PIT','GB','SF','LAR','CAR','TEN','JAX','CLE','NYJ','NO','MIA','NYG'],
             2: ['BUF','LAC','BAL','PHI','GB','KC','LAR','TB','ATL','ARI','SF','MIN','DET','LV','WAS','IND','DAL','PIT','SEA','DEN','HOU','NYJ','CIN','JAX','CHI','NE','CAR','NYG','CLE','MIA','NO','TEN'],
             3: ['BUF','LAC','BAL','GB','PHI','TB','DET','IND','LAR','KC','DEN','SF','WAS','ARI','SEA','HOU','MIN','CIN','ATL','DAL','NE','PIT','LV','NYG','JAX','CHI','NYJ','CLE','CAR','NO','TEN','MIA'],
             4: ['LAC','BUF','PHI','DET','LAR','TB','IND','BAL','GB','SEA','SF','WAS','MIN','KC','DEN','ARI','CLE','CHI','PIT','NE','JAX','HOU','ATL','DAL','CIN','LV','CAR','NYJ','NYG','MIA','TEN','NO'],
@@ -369,7 +385,7 @@
             'NFC West': ['SEA', 'LAR', 'SF', 'ARI']
         };
         
-        const weeks = [2, 3, 4, 5, 6, 7, 8, 9];
+        const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         let highlightedTeams = new Set();
         let canvas, ctx;
         let chartData = {};
