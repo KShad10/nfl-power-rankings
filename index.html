@@ -497,7 +497,7 @@
             }
 
             .predictions-row {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .division-card-title {
@@ -952,7 +952,6 @@
             }
         }
 
-        // Call on page load
         window.addEventListener('load', initializePage);
         
         function initChart() {
@@ -966,7 +965,7 @@
             if (window.innerWidth <= 768) {
                 aspectRatio = 2400 / 1400;
             } else {
-                aspectRatio = 1200 / 1400;
+                aspectRatio = 1400 / 900;
             }
             
             const logicalWidth = Math.min(1400, containerWidth);
