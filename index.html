@@ -1025,17 +1025,25 @@
             
             // Draw white background
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(padding.left, padding.top, chartWidth, chartHeight);
-            
-            // Draw red border
+            const boxMargin = 10; // Tight border around labels
+            const weekLabelHeight = isMobile ? 20 : 30;
+
+            ctx.fillRect(
+                padding.left - rankLabelOffset - boxMargin,  // Start before left labels
+                padding.top - weekLabelHeight - boxMargin,   // Start before week labels
+                chartWidth + (2 * rankLabelOffset) + (2 * boxMargin),  // Include both sides
+                chartHeight + weekLabelHeight + boxMargin    // Include top labels
+            );
+
+            // Draw red border (same dimensions)
             ctx.strokeStyle = '#c8553d';
             ctx.lineWidth = 3;
-            ctx.strokeRect(padding.left, padding.top, chartWidth, chartHeight);
-            
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            
-            ctx.lineWidth = 1;
+            ctx.strokeRect(
+                padding.left - rankLabelOffset - boxMargin,
+                padding.top - weekLabelHeight - boxMargin,
+                chartWidth + (2 * rankLabelOffset) + (2 * boxMargin),
+                chartHeight + weekLabelHeight + boxMargin
+            );
             
             const gridRanks = [1, 7, 13, 19, 25, 32];
             gridRanks.forEach(rank => {
