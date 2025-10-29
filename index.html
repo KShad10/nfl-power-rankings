@@ -289,18 +289,18 @@
             margin: 0 auto;
         }
 
-        /* Predictions Layout - 2 columns of 4 divisions */
+        /* Predictions Layout - 2 rows of 4 divisions */
         .predictions-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 15px;
             max-width: 1600px;
             margin: 0 auto;
         }
 
-        .predictions-column {
-            display: flex;
-            flex-direction: column;
+        .predictions-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
         }
 
@@ -440,8 +440,8 @@
         }
         
         @media (max-width: 1400px) {
-            .predictions-container {
-                grid-template-columns: 1fr;
+            .predictions-row {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -496,7 +496,7 @@
                 height: 22px;
             }
 
-            .predictions-container {
+            .predictions-row {
                 grid-template-columns: 1fr;
             }
 
@@ -841,27 +841,25 @@
             const container = document.getElementById('predictions-container');
             container.innerHTML = '';
 
-            // Column 1: AFC divisions
-            const col1 = document.createElement('div');
-            col1.className = 'predictions-column';
+            const row1 = document.createElement('div');
+            row1.className = 'predictions-row';
             
-            const afcDivisions = ['AFC East', 'AFC North', 'AFC South', 'AFC West'];
+            const afcDivisions = ['AFC East', 'AFC West', 'AFC North', 'AFC South'];
             afcDivisions.forEach(divName => {
-                col1.appendChild(createDivisionCard(divName));
+                row1.appendChild(createDivisionCard(divName));
             });
             
-            container.appendChild(col1);
+            container.appendChild(row1);
 
-            // Column 2: NFC divisions
-            const col2 = document.createElement('div');
-            col2.className = 'predictions-column';
+            const row2 = document.createElement('div');
+            row2.className = 'predictions-row';
             
-            const nfcDivisions = ['NFC East', 'NFC North', 'NFC South', 'NFC West'];
+            const nfcDivisions = ['NFC South', 'NFC North', 'NFC East', 'NFC West'];
             nfcDivisions.forEach(divName => {
-                col2.appendChild(createDivisionCard(divName));
+                row2.appendChild(createDivisionCard(divName));
             });
             
-            container.appendChild(col2);
+            container.appendChild(row2);
         }
 
         function createDivisionCard(divName) {
@@ -947,6 +945,15 @@
                 img.src = `${LOGO_BASE}${team}.png`;
             });
         }
+        function initializePage() {
+            const hash = window.location.hash.substring(1);
+            if (hash === 'predictions') {
+                switchTab('predictions');
+            }
+        }
+
+        // Call on page load
+        window.addEventListener('load', initializePage);
         
         function initChart() {
             canvas = document.getElementById('chart');
@@ -1274,16 +1281,6 @@
         }
         
         preloadLogos();
-        
-        // Initialize page with correct tab based on URL hash
-        function initializePage() {
-            const hash = window.location.hash.substring(1);
-            if (hash === 'predictions') {
-                switchTab('predictions');
-            }
-        }
-        
-        window.addEventListener('load', initializePage);
         
         document.getElementById('clearButton').addEventListener('click', clearHighlight);
         
