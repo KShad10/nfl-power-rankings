@@ -946,8 +946,6 @@
                         document.getElementById('loading').style.display = 'none';
                         document.getElementById('chart').style.display = 'block';
                         initChart();
-                        // Delay tab initialization until after chart is fully drawn
-                        setTimeout(initializeTab, 100);
                     }
                 };
                 img.onerror = () => {
@@ -956,8 +954,6 @@
                         document.getElementById('loading').style.display = 'none';
                         document.getElementById('chart').style.display = 'block';
                         initChart();
-                        // Delay tab initialization until after chart is fully drawn
-                        setTimeout(initializeTab, 100);
                     }
                 };
                 img.src = `${LOGO_BASE}${team}.png`;
@@ -1002,6 +998,11 @@
             
             drawChart();
             createLegend();
+            
+            // Initialize tab after chart is fully rendered
+            requestAnimationFrame(() => {
+                initializeTab();
+            });
         }
         
         function drawChart() {
