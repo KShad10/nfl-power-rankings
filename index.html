@@ -289,51 +289,38 @@
             margin: 0 auto;
         }
 
-        /* Predictions Table Styles */
-        .predictions-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+        /* Predictions Layout - 2 rows of 4 divisions */
+        .predictions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             max-width: 1600px;
             margin: 0 auto;
         }
 
-        .conference-section {
+        .predictions-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .division-card {
             background: #ffffff;
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 8px;
+            padding: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 2px solid #c8553d;
         }
 
-        .conference-title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #2d5016;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #f5e6d3;
-            border-radius: 5px;
-        }
-
-        .division-table {
-            margin-bottom: 25px;
-        }
-
-        .division-table:last-child {
-            margin-bottom: 0;
-        }
-
-        .division-name {
-            font-size: 18px;
+        .division-card-title {
+            font-size: 14px;
             font-weight: bold;
             color: #f5e6d3;
             background: #2d5016;
-            padding: 8px;
+            padding: 6px;
             text-align: center;
             border-radius: 5px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .pred-table {
@@ -344,26 +331,26 @@
         .pred-table th {
             background: #2d5016;
             color: #f5e6d3;
-            padding: 8px;
-            font-size: 13px;
+            padding: 6px 4px;
+            font-size: 11px;
             font-weight: bold;
             text-align: center;
             border: 1px solid #c8553d;
         }
 
         .pred-table td {
-            padding: 8px;
+            padding: 6px 4px;
             text-align: center;
             border: 1px solid #ede0c8;
-            font-size: 13px;
+            font-size: 11px;
         }
 
         .pred-table tr.playoff-team {
-            background: #d4edda;
+            background: #e8f5e9;
         }
 
         .pred-table tr.on-track {
-            background: #d1f2eb;
+            background: #d4edda;
         }
 
         .pred-table tr.behind-pace {
@@ -371,7 +358,7 @@
         }
 
         .pred-table tr.ahead-pace {
-            background: #cfe2ff;
+            background: #d1ecf1;
         }
 
         .pred-table tr.eliminated {
@@ -381,12 +368,12 @@
         .pred-table .rank-col {
             font-weight: bold;
             color: #2d5016;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .pred-table .team-logo {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             object-fit: contain;
             vertical-align: middle;
         }
@@ -395,35 +382,35 @@
             display: inline-block;
             padding: 2px 6px;
             border-radius: 3px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
         }
 
         .status-ahead {
-            background: #0dcaf0;
-            color: #000;
+            background: #5a9f8a;
+            color: #fff;
         }
 
         .status-on-track {
-            background: #198754;
+            background: #4a7c24;
             color: #fff;
         }
 
         .status-behind {
-            background: #ffc107;
+            background: #d4954e;
             color: #000;
         }
 
         .status-way-behind {
-            background: #dc3545;
+            background: #a63c3c;
             color: #fff;
         }
 
         .legend-predictions {
             background: #ffffff;
             border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
+            padding: 12px;
+            margin-top: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 2px solid #c8553d;
         }
@@ -431,37 +418,41 @@
         .legend-predictions h3 {
             text-align: center;
             color: #2d5016;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
 
         .legend-items {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
         }
 
         .legend-pred-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 12px;
         }
 
         .legend-color-box {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 3px;
             border: 1px solid #2d5016;
         }
         
+        @media (max-width: 1400px) {
+            .predictions-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 1200px) {
             .legend {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 10px 6px;
-            }
-
-            .predictions-grid {
-                grid-template-columns: 1fr;
             }
         }
         
@@ -509,22 +500,22 @@
                 height: 22px;
             }
 
-            .conference-title {
-                font-size: 20px;
+            .predictions-row {
+                grid-template-columns: 1fr;
             }
 
-            .division-name {
-                font-size: 16px;
+            .division-card-title {
+                font-size: 13px;
             }
 
             .pred-table th, .pred-table td {
-                padding: 6px 4px;
-                font-size: 11px;
+                padding: 5px 3px;
+                font-size: 10px;
             }
 
             .pred-table .team-logo {
-                width: 20px;
-                height: 20px;
+                width: 18px;
+                height: 18px;
             }
         }
         
@@ -610,7 +601,7 @@
 
             .pred-table th, .pred-table td {
                 padding: 4px 2px;
-                font-size: 10px;
+                font-size: 9px;
             }
 
             .pred-table .team-logo {
@@ -618,18 +609,18 @@
                 height: 16px;
             }
 
-            .conference-section {
-                padding: 15px;
+            .division-card {
+                padding: 10px;
             }
 
-            .conference-title {
-                font-size: 18px;
-                padding: 8px;
+            .division-card-title {
+                font-size: 12px;
+                padding: 5px;
             }
 
-            .division-name {
-                font-size: 14px;
-                padding: 6px;
+            .status-badge {
+                font-size: 8px;
+                padding: 1px 4px;
             }
         }
     </style>
@@ -657,21 +648,21 @@
         </div>
 
         <div id="predictions-tab" class="tab-content">
-            <div class="predictions-grid" id="predictions-grid"></div>
+            <div class="predictions-container" id="predictions-container"></div>
             
             <div class="legend-predictions">
                 <h3>Status Key</h3>
                 <div class="legend-items">
                     <div class="legend-pred-item">
-                        <div class="legend-color-box" style="background: #d4edda;"></div>
+                        <div class="legend-color-box" style="background: #e8f5e9;"></div>
                         <span>Predicted Playoff Team</span>
                     </div>
                     <div class="legend-pred-item">
-                        <div class="legend-color-box" style="background: #cfe2ff;"></div>
+                        <div class="legend-color-box" style="background: #d1ecf1;"></div>
                         <span>Ahead of Pace</span>
                     </div>
                     <div class="legend-pred-item">
-                        <div class="legend-color-box" style="background: #d1f2eb;"></div>
+                        <div class="legend-color-box" style="background: #d4edda;"></div>
                         <span>On Track</span>
                     </div>
                     <div class="legend-pred-item">
@@ -759,7 +750,6 @@
             'NFC West': ['SEA', 'LAR', 'SF', 'ARI']
         };
 
-        // Preseason predictions
         const predictions = {
             'BUF': {rank: 1, wins: 14, losses: 3, divWins: 6, divLosses: 0},
             'LAC': {rank: 2, wins: 13, losses: 4, divWins: 3, divLosses: 3},
@@ -833,10 +823,9 @@
             const projectedWins = current.wins + (gamesRemaining * currentWinPct);
             const diff = projectedWins - predicted.wins;
             
-            // Check if mathematically eliminated from prediction
             const maxPossibleWins = current.wins + gamesRemaining;
             if (maxPossibleWins < predicted.wins) {
-                return {class: 'eliminated', badge: 'way-behind', text: 'Eliminated'};
+                return {class: 'eliminated', badge: 'way-behind', text: 'Way Behind'};
             }
             
             if (diff >= 2) {
@@ -851,89 +840,88 @@
         }
 
         function renderPredictions() {
-            const grid = document.getElementById('predictions-grid');
-            grid.innerHTML = '';
+            const container = document.getElementById('predictions-container');
+            container.innerHTML = '';
 
-            const conferences = {
-                'AFC': {
-                    'AFC East': ['BUF', 'NE', 'NYJ', 'MIA'],
-                    'AFC West': ['LAC', 'KC', 'LV', 'DEN'],
-                    'AFC North': ['BAL', 'CIN', 'PIT', 'CLE'],
-                    'AFC South': ['IND', 'HOU', 'TEN', 'JAX']
-                },
-                'NFC': {
-                    'NFC South': ['ATL', 'TB', 'CAR', 'NO'],
-                    'NFC North': ['MIN', 'CHI', 'DET', 'GB'],
-                    'NFC East': ['PHI', 'WAS', 'DAL', 'NYG'],
-                    'NFC West': ['ARI', 'SEA', 'SF', 'LAR']
-                }
-            };
-
-            Object.keys(conferences).forEach(conf => {
-                const confSection = document.createElement('div');
-                confSection.className = 'conference-section';
-                
-                const confTitle = document.createElement('div');
-                confTitle.className = 'conference-title';
-                confTitle.textContent = conf;
-                confSection.appendChild(confTitle);
-
-                Object.keys(conferences[conf]).forEach(divName => {
-                    const divTable = document.createElement('div');
-                    divTable.className = 'division-table';
-                    
-                    const divHeader = document.createElement('div');
-                    divHeader.className = 'division-name';
-                    divHeader.textContent = divName;
-                    divTable.appendChild(divHeader);
-                    
-                    const table = document.createElement('table');
-                    table.className = 'pred-table';
-                    
-                    const thead = document.createElement('thead');
-                    thead.innerHTML = `
-                        <tr>
-                            <th>Rank</th>
-                            <th>Team</th>
-                            <th>Predicted</th>
-                            <th>Current</th>
-                            <th>Status</th>
-                        </tr>
-                    `;
-                    table.appendChild(thead);
-                    
-                    const tbody = document.createElement('tbody');
-                    
-                    conferences[conf][divName].forEach(team => {
-                        const pred = predictions[team];
-                        const current = parseRecord(standingsRecords[team]);
-                        const status = getStatus(team, current, pred);
-                        const isPlayoffTeam = pred.wins >= 10; // Simplified playoff criteria
-                        
-                        const tr = document.createElement('tr');
-                        tr.className = isPlayoffTeam ? 'playoff-team' : status.class;
-                        
-                        tr.innerHTML = `
-                            <td class="rank-col">${pred.rank}</td>
-                            <td>
-                                <img src="${LOGO_BASE}${team}.png" class="team-logo" alt="${team}">
-                                ${team}
-                            </td>
-                            <td>${pred.wins}-${pred.losses}</td>
-                            <td>${standingsRecords[team]}</td>
-                            <td><span class="status-badge status-${status.badge}">${status.text}</span></td>
-                        `;
-                        
-                        tbody.appendChild(tr);
-                    });
-                    
-                    table.appendChild(tbody);
-                    divTable.appendChild(table);
-                    confSection.appendChild(divTable);
-                });
-                
-                grid.appendChild(confSection);
+            // Row 1: AFC East, AFC West, AFC North, AFC South
+            const row1 = document.createElement('div');
+            row1.className = 'predictions-row';
+            
+            const afcDivisions = ['AFC East', 'AFC West', 'AFC North', 'AFC South'];
+            afcDivisions.forEach(divName => {
+                row1.appendChild(createDivisionCard(divName));
             });
+            
+            container.appendChild(row1);
+
+            // Row 2: NFC South, NFC North, NFC East, NFC West
+            const row2 = document.createElement('div');
+            row2.className = 'predictions-row';
+            
+            const nfcDivisions = ['NFC South', 'NFC North', 'NFC East', 'NFC West'];
+            nfcDivisions.forEach(divName => {
+                row2.appendChild(createDivisionCard(divName));
+            });
+            
+            container.appendChild(row2);
+        }
+
+        function createDivisionCard(divName) {
+            const card = document.createElement('div');
+            card.className = 'division-card';
+            
+            const title = document.createElement('div');
+            title.className = 'division-card-title';
+            title.textContent = divName;
+            card.appendChild(title);
+            
+            const table = document.createElement('table');
+            table.className = 'pred-table';
+            
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Pred</th>
+                    <th>Cur</th>
+                    <th>Status</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+            
+            const tbody = document.createElement('tbody');
+            
+            const divTeams = divisions[divName];
+            divTeams.sort((a, b) => predictions[a].rank - predictions[b].rank);
+            
+            divTeams.forEach(team => {
+                const pred = predictions[team];
+                const current = parseRecord(standingsRecords[team]);
+                const status = getStatus(team, current, pred);
+                const isPlayoffTeam = pred.wins >= 10;
+                
+                const tr = document.createElement('tr');
+                tr.className = isPlayoffTeam ? 'playoff-team' : status.class;
+                
+                tr.innerHTML = `
+                    <td class="rank-col">${pred.rank}</td>
+                    <td>
+                        <img src="${LOGO_BASE}${team}.png" class="team-logo" alt="${team}">
+                        ${team}
+                    </td>
+                    <td>${pred.wins}-${pred.losses}</td>
+                    <td>${standingsRecords[team]}</td>
+                    <td><span class="status-badge status-${status.badge}">${status.text}</span></td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            card.appendChild(table);
+            
+            return card;
         }
         
         function preloadLogos() {
