@@ -1019,28 +1019,34 @@
             
             ctx.clearRect(0, 0, logicalWidth, logicalHeight);
             
-            // Add white background and red border
             const isMobile = window.innerWidth <= 768;
-            const padding = isMobile 
+            const boxMargin = 15;
+            const weekLabelHeight = isMobile ? 20 : 30;
+            const topExtension = weekLabelHeight + boxMargin + 10;
+            const bottomExtension = boxMargin + 10;
+            
+            // CRITICAL: Add vertical offset to shift everything down
+            const verticalOffset = topExtension;
+            
+            const basePadding = isMobile 
                 ? {top: 40, right: 40, bottom: 40, left: 40}
                 : {top: 50, right: 60, bottom: 50, left: 60};
+            
+            const padding = {
+                top: basePadding.top + verticalOffset,  // Shift down
+                right: basePadding.right,
+                bottom: basePadding.bottom,
+                left: basePadding.left
+            };
+            
             const rankFontSize = isMobile ? '12px' : '16px';
             const weekFontSize = isMobile ? '12px' : '16px';
             const rankLabelOffset = isMobile ? 25 : 35;
+            const borderRadius = 10;
             
             const chartWidth = logicalWidth - padding.left - padding.right;
             const chartHeight = logicalHeight - padding.top - padding.bottom;
             
-            // Draw white background with rounded corners
-            ctx.fillStyle = '#ffffff';
-            const boxMargin = 15;
-            const weekLabelHeight = isMobile ? 20 : 30;
-            const borderRadius = 10;
-
-            // Add extra space for full wrapping
-            const topExtension = weekLabelHeight + boxMargin + 10; // Extra 10px above weeks
-            const bottomExtension = boxMargin + 10; // Extra 10px below rank 32
-
             const boxX = padding.left - rankLabelOffset - boxMargin;
             const boxY = padding.top - topExtension;
             const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin);
