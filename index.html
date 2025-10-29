@@ -946,7 +946,8 @@
                         document.getElementById('loading').style.display = 'none';
                         document.getElementById('chart').style.display = 'block';
                         initChart();
-                        initializeTab();
+                        // Delay tab initialization until after chart is fully drawn
+                        setTimeout(initializeTab, 100);
                     }
                 };
                 img.onerror = () => {
@@ -955,7 +956,8 @@
                         document.getElementById('loading').style.display = 'none';
                         document.getElementById('chart').style.display = 'block';
                         initChart();
-                        initializeTab();
+                        // Delay tab initialization until after chart is fully drawn
+                        setTimeout(initializeTab, 100);
                     }
                 };
                 img.src = `${LOGO_BASE}${team}.png`;
