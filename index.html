@@ -1117,68 +1117,37 @@
             ctx.stroke();
             
             const logoAlpha = hasHighlights ? (highlighted ? 1 : 0.2) : 1;
-            
+
             let baseLogoSize, highlightedLogoSize;
             if (window.innerWidth <= 480) {
-                baseLogoSize = 20;
-                highlightedLogoSize = 28;
+                baseLogoSize = 24;
+                highlightedLogoSize = 32;
             } else if (window.innerWidth <= 768) {
-                baseLogoSize = 24;
-                highlightedLogoSize = 32;
+                baseLogoSize = 28;
+                highlightedLogoSize = 36;
             } else {
-                baseLogoSize = 24;
-                highlightedLogoSize = 32;
+                baseLogoSize = 32;
+                highlightedLogoSize = 42;
             }
-            
+
             const logoSize = highlighted ? highlightedLogoSize : baseLogoSize;
             ctx.globalAlpha = logoAlpha;
-            
+
             if (teamLogos[team]) {
                 data.forEach((rank, i) => {
                     const baseX = padding.left + (i / (weeks.length - 1)) * chartWidth;
                     const baseY = padding.top + ((rank - 1) / 31) * chartHeight;
                     
-                    const week = weeks[i];
-                    const teamsAtRank = rankings[week].filter((t, idx) => idx === rank - 1);
-                    const teamsAtSameRank = Object.keys(chartData).filter(t => 
-                        chartData[t][i] === rank
-                    );
-                    
-                    let xOffset = 0;
-                    let yOffset = 0;
-                    
-                    if (teamsAtSameRank.length > 1) {
-                        const sortedTeams = teamsAtSameRank.sort();
-                        const indexInGroup = sortedTeams.indexOf(team);
-                        const totalInGroup = sortedTeams.length;
-                        
-                        const spreadX = isMobile ? 8 : 12;
-                        const spreadY = isMobile ? 18 : 25;
-                        
-                        if (totalInGroup === 2) {
-                            xOffset = (indexInGroup - 0.5) * spreadX;
-                            yOffset = (indexInGroup - 0.5) * spreadY;
-                        } else if (totalInGroup === 3) {
-                            xOffset = (indexInGroup - 1) * spreadX;
-                            yOffset = (indexInGroup - 1) * spreadY;
-                        } else {
-                            const col = indexInGroup % 2;
-                            const row = Math.floor(indexInGroup / 2);
-                            xOffset = (col - 0.5) * spreadX * 1.5;
-                            yOffset = (row - (totalInGroup / 4)) * spreadY * 2.0;
-                        }
-                    }
-                    
                     ctx.drawImage(
                         teamLogos[team],
-                        baseX - logoSize / 2 + xOffset,
-                        baseY - logoSize / 2 + yOffset,
+                        baseX - logoSize / 2,
+                        baseY - logoSize / 2,
                         logoSize,
                         logoSize
                     );
                 });
             }
-            
+
             ctx.globalAlpha = 1;
         }
         
