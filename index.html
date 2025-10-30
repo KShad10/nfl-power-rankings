@@ -788,12 +788,12 @@
                 document.getElementById('rankings-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[0].classList.add('active');
                 window.location.hash = 'rankings';
-                // Force chart redraw after tab becomes visible
+                // Reinitialize chart after tab becomes visible to recalculate dimensions
                 setTimeout(() => {
-                    if (canvas && ctx) {
-                        drawChart();
+                    if (canvas && ctx && imagesLoaded === totalImages) {
+                        initChart();
                     }
-                }, 50);
+                }, 100);
             } else {
                 document.getElementById('predictions-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[1].classList.add('active');
