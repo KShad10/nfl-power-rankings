@@ -1021,14 +1021,14 @@
             ctx.fillStyle = '#ffffff';
             const boxMargin = 15;
             const weekLabelHeight = isMobile ? 20 : 30;
-            const borderRadius = 10;
+            const borderRadius = 8;
+            const borderStrokeBuffer = 10; // Match the buffer from initChart
 
             // Add extra space for full wrapping
             const topExtension = weekLabelHeight + boxMargin + 10; // Extra 10px above weeks
             const bottomExtension = boxMargin + 10; // Extra 10px below rank 32
 
             const boxX = padding.left - rankLabelOffset - boxMargin + (isMobile ? borderStrokeBuffer : 0);
-            const borderStrokeBuffer = 10; // Match the buffer from initChart
             const boxY = padding.top - topExtension + borderStrokeBuffer;
             const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin);
             const boxHeight = chartHeight + topExtension + bottomExtension;
