@@ -838,24 +838,27 @@
             const container = document.getElementById('predictions-container');
             container.innerHTML = '';
 
-            const row = document.createElement('div');
-            row.className = 'predictions-row';
+            // Row 1: Alternate AFC East/North with NFC East/North
+            const row1 = document.createElement('div');
+            row1.className = 'predictions-row';
             
-            // Interleave AFC and NFC divisions for mobile layout
-            const divisionPairs = [
-                ['AFC East', 'NFC East'],
-                ['AFC North', 'NFC North'],
-                ['AFC South', 'NFC South'],
-                ['AFC West', 'NFC West']
-            ];
-            
-            divisionPairs.forEach(pair => {
-                pair.forEach(divName => {
-                    row.appendChild(createDivisionCard(divName));
-                });
+            const row1Divisions = ['AFC East', 'NFC East', 'AFC North', 'NFC North'];
+            row1Divisions.forEach(divName => {
+                row1.appendChild(createDivisionCard(divName));
             });
             
-            container.appendChild(row);
+            container.appendChild(row1);
+
+            // Row 2: Alternate AFC South/West with NFC South/West
+            const row2 = document.createElement('div');
+            row2.className = 'predictions-row';
+            
+            const row2Divisions = ['AFC South', 'NFC South', 'AFC West', 'NFC West'];
+            row2Divisions.forEach(divName => {
+                row2.appendChild(createDivisionCard(divName));
+            });
+            
+            container.appendChild(row2);
         }
 
         function createDivisionCard(divName) {
