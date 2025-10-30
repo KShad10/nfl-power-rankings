@@ -838,25 +838,24 @@
             const container = document.getElementById('predictions-container');
             container.innerHTML = '';
 
-            const row1 = document.createElement('div');
-            row1.className = 'predictions-row';
+            const row = document.createElement('div');
+            row.className = 'predictions-row';
             
-            const afcDivisions = ['AFC East', 'AFC West', 'AFC North', 'AFC South'];
-            afcDivisions.forEach(divName => {
-                row1.appendChild(createDivisionCard(divName));
+            // Interleave AFC and NFC divisions for mobile layout
+            const divisionPairs = [
+                ['AFC East', 'NFC East'],
+                ['AFC North', 'NFC North'],
+                ['AFC South', 'NFC South'],
+                ['AFC West', 'NFC West']
+            ];
+            
+            divisionPairs.forEach(pair => {
+                pair.forEach(divName => {
+                    row.appendChild(createDivisionCard(divName));
+                });
             });
             
-            container.appendChild(row1);
-
-            const row2 = document.createElement('div');
-            row2.className = 'predictions-row';
-            
-            const nfcDivisions = ['NFC South', 'NFC North', 'NFC East', 'NFC West'];
-            nfcDivisions.forEach(divName => {
-                row2.appendChild(createDivisionCard(divName));
-            });
-            
-            container.appendChild(row2);
+            container.appendChild(row);
         }
 
         function createDivisionCard(divName) {
