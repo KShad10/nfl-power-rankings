@@ -1028,11 +1028,11 @@
             const topExtension = weekLabelHeight + boxMargin + 10; // Extra 10px above weeks
             const bottomExtension = boxMargin + 10; // Extra 10px below rank 32
 
-            const boxX = padding.left - rankLabelOffset - boxMargin + (isMobile ? borderStrokeBuffer : 0);
+            const boxX = padding.left - rankLabelOffset - boxMargin + borderStrokeBuffer;
             const boxY = padding.top - topExtension + borderStrokeBuffer;
-            const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin);
+            const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin) - (borderStrokeBuffer * 2);
             const boxHeight = chartHeight + topExtension + bottomExtension;
-
+            
             // Fill rounded rectangle
             ctx.beginPath();
             ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
