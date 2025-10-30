@@ -967,7 +967,7 @@
             const isMobile = window.innerWidth <= 768;
             const weekLabelHeight = isMobile ? 20 : 30;
             const boxMargin = 20;
-            const borderStrokeBuffer = 5; // Buffer for 3px border stroke
+            const borderStrokeBuffer = 10; // Buffer for 3px border stroke
             const topExtension = weekLabelHeight + boxMargin + 30;
             const bottomExtension = boxMargin + 10;
             const extraHorizontal = 80; // For left/right labels
@@ -1028,7 +1028,7 @@
             const bottomExtension = boxMargin + 10; // Extra 10px below rank 32
 
             const boxX = padding.left - rankLabelOffset - boxMargin;
-            const borderStrokeBuffer = 5; // Match the buffer from initChart
+            const borderStrokeBuffer = 10; // Match the buffer from initChart
             const boxY = padding.top - topExtension + borderStrokeBuffer;
             const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin);
             const boxHeight = chartHeight + topExtension + bottomExtension;
