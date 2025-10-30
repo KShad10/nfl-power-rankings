@@ -970,7 +970,7 @@
             const borderStrokeBuffer = 10; // Buffer for 3px border stroke
             const topExtension = weekLabelHeight + boxMargin + 30;
             const bottomExtension = boxMargin + 10;
-            const extraHorizontal = 80; // For left/right labels
+            const extraHorizontal = 80 + (borderStrokeBuffer * 2); // For left/right labels + border buffer
             const extraVertical = topExtension + bottomExtension + (borderStrokeBuffer * 2); // Add buffer top & bottom
             
             const logicalWidth = Math.min(800, containerWidth) + extraHorizontal;
