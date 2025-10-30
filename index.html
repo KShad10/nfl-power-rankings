@@ -1029,9 +1029,9 @@
             const bottomExtension = boxMargin + 10; // Extra 10px below rank 32
 
             const boxX = padding.left - rankLabelOffset - boxMargin + borderStrokeBuffer;
-            const boxY = padding.top - topExtension + borderStrokeBuffer;
+            const boxY = borderStrokeBuffer;
             const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin) - (borderStrokeBuffer * 2);
-            const boxHeight = chartHeight + topExtension + bottomExtension;
+            const boxHeight = logicalHeight - (borderStrokeBuffer * 2);
             
             // Fill rounded rectangle
             ctx.beginPath();
