@@ -444,6 +444,16 @@
             .predictions-row {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            /* Reorder for mobile: AFC left column, NFC right column */
+            .div-1 { order: 1; }  /* AFC East */
+            .div-2 { order: 3; }  /* AFC North */
+            .div-3 { order: 5; }  /* AFC South */
+            .div-4 { order: 7; }  /* AFC West */
+            .div-5 { order: 2; }  /* NFC East */
+            .div-6 { order: 4; }  /* NFC North */
+            .div-7 { order: 6; }  /* NFC South */
+            .div-8 { order: 8; }  /* NFC West */
         }
 
         @media (max-width: 1200px) {
@@ -838,27 +848,22 @@
             const container = document.getElementById('predictions-container');
             container.innerHTML = '';
 
-            // Row 1: Alternate AFC East/North with NFC East/North
-            const row1 = document.createElement('div');
-            row1.className = 'predictions-row';
+            const row = document.createElement('div');
+            row.className = 'predictions-row';
             
-            const row1Divisions = ['AFC East', 'NFC East', 'AFC North', 'NFC North'];
-            row1Divisions.forEach(divName => {
-                row1.appendChild(createDivisionCard(divName));
+            // Order for both desktop and mobile layouts
+            const allDivisions = [
+                'AFC East', 'AFC North', 'AFC South', 'AFC West',
+                'NFC East', 'NFC North', 'NFC South', 'NFC West'
+            ];
+            
+            allDivisions.forEach((divName, index) => {
+                const card = createDivisionCard(divName);
+                card.classList.add(`div-${index + 1}`);
+                row.appendChild(card);
             });
             
-            container.appendChild(row1);
-
-            // Row 2: Alternate AFC South/West with NFC South/West
-            const row2 = document.createElement('div');
-            row2.className = 'predictions-row';
-            
-            const row2Divisions = ['AFC South', 'NFC South', 'AFC West', 'NFC West'];
-            row2Divisions.forEach(divName => {
-                row2.appendChild(createDivisionCard(divName));
-            });
-            
-            container.appendChild(row2);
+            container.appendChild(row);
         }
 
         function createDivisionCard(divName) {
