@@ -89,18 +89,6 @@
             display: block;
         }
         
-        /*.chart-container {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 10px 10px 10px 10px;  
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 2px solid #c8553d; 
-        } */
-        
         canvas {
             display: block;
             max-width: 100%;
@@ -289,7 +277,6 @@
             margin: 0 auto;
         }
 
-        /* Predictions Layout - 2 rows of 4 divisions */
         .predictions-container {
             display: flex;
             flex-direction: column;
@@ -445,15 +432,14 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            /* Reorder for mobile: AFC left column, NFC right column */
-            .div-1 { order: 1; }  /* AFC East */
-            .div-2 { order: 3; }  /* AFC North */
-            .div-3 { order: 5; }  /* AFC South */
-            .div-4 { order: 7; }  /* AFC West */
-            .div-5 { order: 2; }  /* NFC East */
-            .div-6 { order: 4; }  /* NFC North */
-            .div-7 { order: 6; }  /* NFC South */
-            .div-8 { order: 8; }  /* NFC West */
+            .div-1 { order: 1; }
+            .div-2 { order: 3; }
+            .div-3 { order: 5; }
+            .div-4 { order: 7; }
+            .div-5 { order: 2; }
+            .div-6 { order: 4; }
+            .div-7 { order: 6; }
+            .div-8 { order: 8; }
         }
 
         @media (max-width: 1200px) {
@@ -481,11 +467,6 @@
             .tab-button {
                 padding: 10px 20px;
                 font-size: 14px;
-            }
-            
-            .chart-container {
-                padding: 15px;
-                border-width: 2px;
             }
             
             .legend {
@@ -689,7 +670,8 @@
             6: ['DET','BUF','IND','PHI','LAR','TB','SEA','GB','KC','DEN','LAC','SF','NE','JAX','HOU','PIT','DAL','CHI','MIN','WAS','ATL','BAL','ARI','CLE','NO','CAR','LV','NYG','CIN','MIA','TEN','NYJ'],
             7: ['IND','TB','SEA','BUF','KC','DET','LAR','GB','LAC','DEN','NE','PHI','SF','HOU','PIT','JAX','ATL','CHI','DAL','MIN','WAS','ARI','BAL','NO','CAR','LV','CLE','NYG','CIN','MIA','TEN','NYJ'],
             8: ['IND','KC','DET','LAR','BUF','PHI','GB','TB','SEA','NE','SF','DEN','LAC','DAL','CHI','JAX','PIT','HOU','ARI','ATL','MIN','WAS','BAL','NO','CAR','CLE','NYG','CIN','LV','MIA','TEN','NYJ'],
-            9: ['IND','KC','DET','BUF','LAR','PHI','GB','TB','SEA','NE','LAC','DEN','SF','JAX','DAL','HOU','CHI','PIT','BAL','ARI','ATL','WAS','MIN','CAR','CIN','CLE','NO','LV','MIA','NYG','NYJ','TEN']
+            9: ['IND','KC','DET','BUF','LAR','PHI','GB','TB','SEA','NE','LAC','DEN','SF','JAX','DAL','HOU','CHI','PIT','BAL','ARI','ATL','WAS','MIN','CAR','CIN','CLE','NO','LV','MIA','NYG','NYJ','TEN'],
+            10: ['IND','BUF','LAR','PHI','KC','DET','SEA','NE','GB','TB','DEN','SF','LAC','BAL','CHI','JAX','PIT','HOU','DAL','ARI','MIN','CAR','ATL','WAS','CIN','CLE','LV','MIA','NYG','NO','NYJ','TEN']
         };
         
         const teamNames = {
@@ -726,19 +708,19 @@
         };
         
         const standingsRecords = {
-            'BUF': '5-2', 'MIA': '2-6', 'NE': '6-2', 'NYJ': '1-7',
-            'BAL': '2-5', 'CIN': '3-5', 'CLE': '2-6', 'PIT': '4-3',
-            'HOU': '3-4', 'IND': '7-1', 'JAX': '4-3', 'TEN': '1-7',
-            'DEN': '6-2', 'KC': '5-3', 'LAC': '5-3', 'LV': '2-5',
-            'DAL': '3-4-1', 'NYG': '2-6', 'PHI': '6-2', 'WAS': '3-5',
-            'CHI': '4-3', 'DET': '5-2', 'GB': '5-1-1', 'MIN': '3-4',
-            'ATL': '3-4', 'CAR': '4-4', 'NO': '1-7', 'TB': '6-2',
-            'ARI': '2-5', 'LAR': '5-2', 'SEA': '5-2', 'SF': '5-3'
+            'BUF': '6-2', 'MIA': '2-7', 'NE': '7-2', 'NYJ': '1-8',
+            'BAL': '3-5', 'CIN': '3-5', 'CLE': '2-7', 'PIT': '5-3',
+            'HOU': '3-5', 'IND': '7-2', 'JAX': '5-3', 'TEN': '1-8',
+            'DEN': '7-2', 'KC': '5-4', 'LAC': '6-3', 'LV': '2-6',
+            'DAL': '3-5-1', 'NYG': '2-7', 'PHI': '7-2', 'WAS': '3-6',
+            'CHI': '5-3', 'DET': '5-3', 'GB': '6-2', 'MIN': '4-4',
+            'ATL': '3-5', 'CAR': '5-4', 'NO': '1-8', 'TB': '6-2',
+            'ARI': '3-5', 'LAR': '6-2', 'SEA': '6-2', 'SF': '6-3'
         };
         
         const divisionsByStandings = {
             'AFC East': ['NE', 'BUF', 'MIA', 'NYJ'],
-            'AFC North': ['PIT', 'CIN', 'BAL', 'CLE'],
+            'AFC North': ['PIT', 'BAL', 'CIN', 'CLE'],
             'AFC South': ['IND', 'JAX', 'HOU', 'TEN'],
             'AFC West': ['DEN', 'LAC', 'KC', 'LV'],
             'NFC East': ['PHI', 'DAL', 'WAS', 'NYG'],
@@ -782,7 +764,7 @@
             'LAR': {rank: 16, wins: 2, losses: 15, divWins: 0, divLosses: 6}
         };
         
-        const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         let highlightedTeams = new Set();
         let canvas, ctx;
         let chartData = {};
@@ -798,7 +780,6 @@
                 document.getElementById('rankings-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[0].classList.add('active');
                 window.location.hash = 'rankings';
-                // Reinitialize chart after tab becomes visible to recalculate dimensions
                 setTimeout(() => {
                     if (canvas && ctx && imagesLoaded === totalImages) {
                         initChart();
@@ -851,7 +832,6 @@
             const row = document.createElement('div');
             row.className = 'predictions-row';
             
-            // Order for both desktop and mobile layouts
             const allDivisions = [
                 'AFC East', 'AFC North', 'AFC South', 'AFC West',
                 'NFC East', 'NFC North', 'NFC South', 'NFC West'
@@ -974,11 +954,11 @@
             const isMobile = window.innerWidth <= 768;
             const weekLabelHeight = isMobile ? 20 : 30;
             const boxMargin = 25;
-            const borderStrokeBuffer = 10; // Buffer for 3px border stroke
+            const borderStrokeBuffer = 10;
             const topExtension = weekLabelHeight + boxMargin + 30;
             const bottomExtension = boxMargin + 10;
-            const extraHorizontal = 80; // For left/right labels
-            const extraVertical = topExtension + bottomExtension + (borderStrokeBuffer * 2); // Add buffer top & bottom
+            const extraHorizontal = 80;
+            const extraVertical = topExtension + bottomExtension + (borderStrokeBuffer * 2);
             
             const logicalWidth = Math.min(800, containerWidth) + extraHorizontal;
             const logicalHeight = (logicalWidth - extraHorizontal) * aspectRatio + extraVertical;
@@ -1012,7 +992,6 @@
             
             ctx.clearRect(0, 0, logicalWidth, logicalHeight);
             
-            // Add white background and red border
             const isMobile = window.innerWidth <= 768;
             const padding = isMobile 
                 ? {top: 40, right: 40, bottom: 40, left: 40}
@@ -1024,28 +1003,24 @@
             const chartWidth = logicalWidth - padding.left - padding.right;
             const chartHeight = logicalHeight - padding.top - padding.bottom;
             
-            // Draw white background with rounded corners
             ctx.fillStyle = '#ffffff';
             const boxMargin = 25;
             const weekLabelHeight = isMobile ? 20 : 30;
             const borderRadius = 8;
-            const borderStrokeBuffer = 10; // Match the buffer from initChart
+            const borderStrokeBuffer = 10;
 
-            // Add extra space for full wrapping
-            const topExtension = weekLabelHeight + boxMargin + 10; // Extra 10px above weeks
-            const bottomExtension = boxMargin + 10; // Extra 10px below rank 32
+            const topExtension = weekLabelHeight + boxMargin + 10;
+            const bottomExtension = boxMargin + 10;
 
             const boxX = padding.left - rankLabelOffset - boxMargin + borderStrokeBuffer;
             const boxY = borderStrokeBuffer;
             const boxWidth = chartWidth + (2 * rankLabelOffset) + (2 * boxMargin) - (borderStrokeBuffer * 2);
             const boxHeight = logicalHeight - (borderStrokeBuffer * 2);
             
-            // Fill rounded rectangle
             ctx.beginPath();
             ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
             ctx.fill();
 
-            // Draw red border with rounded corners
             ctx.strokeStyle = '#c8553d';
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -1225,7 +1200,7 @@
             const legend = document.getElementById('legend');
             legend.innerHTML = '';
             
-            const week9Rankings = rankings[9];
+            const week10Rankings = rankings[10];
             
             Object.keys(divisionsByStandings).forEach(divisionName => {
                 const divisionSection = document.createElement('div');
@@ -1267,7 +1242,7 @@
                     
                     item.appendChild(teamInfo);
                     
-                    const currentRank = week9Rankings.indexOf(team) + 1;
+                    const currentRank = week10Rankings.indexOf(team) + 1;
                     const rankBadge = document.createElement('div');
                     rankBadge.className = `rank-badge ${getRankTier(currentRank)}`;
                     rankBadge.textContent = `#${currentRank}`;
