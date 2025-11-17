@@ -390,6 +390,55 @@
             color: #fff;
         }
 
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: #2d5016;
+            color: #f5e6d3;
+            padding: 8px 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #c8553d;
+        }
+
+        .comparison-table td {
+            padding: 6px 4px;
+            text-align: center;
+            border: 1px solid #ede0c8;
+            font-size: 11px;
+        }
+
+        .comparison-table .team-logo {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .comparison-table .rank-col {
+            font-weight: bold;
+            color: #2d5016;
+            font-size: 11px;
+        }
+
+        .delta-positive {
+            color: #4a7c24;
+            font-weight: bold;
+        }
+
+        .delta-negative {
+            color: #a63c3c;
+            font-weight: bold;
+        }
+
+        .delta-neutral {
+            color: #6b705c;
+        }
+
         .legend-predictions {
             background: #ffffff;
             border-radius: 10px;
@@ -515,6 +564,16 @@
                 font-size: 8px;
                 padding: 2px 4px;
             }
+
+            .comparison-table th, .comparison-table td {
+                padding: 5px 2px;
+                font-size: 9px;
+            }
+
+            .comparison-table .team-logo {
+                width: 18px;
+                height: 18px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -620,6 +679,16 @@
                 font-size: 7px;
                 padding: 1px 3px;
             }
+
+            .comparison-table th, .comparison-table td {
+                padding: 4px 1px;
+                font-size: 8px;
+            }
+
+            .comparison-table .team-logo {
+                width: 16px;
+                height: 16px;
+            }
         }
     </style>
 </head>
@@ -633,6 +702,8 @@
         <div class="tab-container">
             <button class="tab-button active" onclick="switchTab('rankings')">Power Rankings Progression</button>
             <button class="tab-button" onclick="switchTab('predictions')">Preseason Predictions vs Standings</button>
+            <button class="tab-button" onclick="switchTab('midseason')">Midseason Predictions vs Standings</button>
+            <button class="tab-button" onclick="switchTab('comparison')">Full Comparison</button>
         </div>
 
         <div id="rankings-tab" class="tab-content active">
@@ -654,6 +725,26 @@
                 </div>
             </div>
         </div>
+
+        <div id="midseason-tab" class="tab-content">
+            <div class="predictions-container" id="midseason-container"></div>
+            
+            <div class="legend-predictions">
+                <div style="text-align: center; font-size: 14px; color: #2d5016;">
+                    * = Predicted Playoff Team
+                </div>
+            </div>
+        </div>
+
+        <div id="comparison-tab" class="tab-content">
+            <div class="predictions-container" id="comparison-container"></div>
+            
+            <div class="legend-predictions">
+                <div style="text-align: center; font-size: 14px; color: #2d5016;">
+                    Preseason → Midseason → Current Standings Comparison
+                </div>
+            </div>
+        </div>
         
         <button class="clear-button" id="clearButton">Clear All</button>
     </div>
@@ -671,7 +762,8 @@
             7: ['IND','TB','SEA','BUF','KC','DET','LAR','GB','LAC','DEN','NE','PHI','SF','HOU','PIT','JAX','ATL','CHI','DAL','MIN','WAS','ARI','BAL','NO','CAR','LV','CLE','NYG','CIN','MIA','TEN','NYJ'],
             8: ['IND','KC','DET','LAR','BUF','PHI','GB','TB','SEA','NE','SF','DEN','LAC','DAL','CHI','JAX','PIT','HOU','ARI','ATL','MIN','WAS','BAL','NO','CAR','CLE','NYG','CIN','LV','MIA','TEN','NYJ'],
             9: ['IND','KC','DET','BUF','LAR','PHI','GB','TB','SEA','NE','LAC','DEN','SF','JAX','DAL','HOU','CHI','PIT','BAL','ARI','ATL','WAS','MIN','CAR','CIN','CLE','NO','LV','MIA','NYG','NYJ','TEN'],
-            10: ['IND','BUF','LAR','PHI','KC','DET','SEA','NE','GB','TB','DEN','SF','LAC','BAL','CHI','JAX','PIT','HOU','DAL','ARI','MIN','CAR','ATL','WAS','CIN','CLE','LV','MIA','NYG','NO','NYJ','TEN']
+            10: ['IND','BUF','LAR','PHI','KC','DET','SEA','NE','GB','TB','DEN','SF','LAC','BAL','CHI','JAX','PIT','HOU','DAL','ARI','MIN','CAR','ATL','WAS','CIN','CLE','LV','MIA','NYG','NO','NYJ','TEN'],
+            11: ['LAR','IND','DET','PHI','KC','SEA','BUF','NE','GB','TB','LAC','DEN','BAL','SF','CHI','HOU','JAX','PIT','DAL','ATL','MIN','ARI','CAR','CIN','CLE','NO','WAS','LV','MIA','NYG','NYJ','TEN']
         };
         
         const teamNames = {
@@ -708,14 +800,14 @@
         };
         
         const standingsRecords = {
-            'BUF': '6-2', 'MIA': '2-7', 'NE': '7-2', 'NYJ': '1-8',
-            'BAL': '3-5', 'CIN': '3-5', 'CLE': '2-7', 'PIT': '5-3',
-            'HOU': '3-5', 'IND': '7-2', 'JAX': '5-3', 'TEN': '1-8',
-            'DEN': '7-2', 'KC': '5-4', 'LAC': '6-3', 'LV': '2-6',
-            'DAL': '3-5-1', 'NYG': '2-7', 'PHI': '7-2', 'WAS': '3-6',
-            'CHI': '5-3', 'DET': '5-3', 'GB': '6-2', 'MIN': '4-4',
-            'ATL': '3-5', 'CAR': '5-4', 'NO': '1-8', 'TB': '6-2',
-            'ARI': '3-5', 'LAR': '6-2', 'SEA': '6-2', 'SF': '6-3'
+            'BUF': '6-3', 'MIA': '3-7', 'NE': '8-2', 'NYJ': '2-7',
+            'BAL': '4-5', 'CIN': '3-5', 'CLE': '2-7', 'PIT': '5-4',
+            'HOU': '3-5', 'IND': '8-2', 'JAX': '5-4', 'TEN': '1-8',
+            'DEN': '8-2', 'KC': '5-4', 'LAC': '7-3', 'LV': '2-6',
+            'DAL': '3-5-1', 'NYG': '2-8', 'PHI': '7-2', 'WAS': '3-7',
+            'CHI': '6-3', 'DET': '6-3', 'GB': '5-3-1', 'MIN': '4-5',
+            'ATL': '3-6', 'CAR': '5-5', 'NO': '2-8', 'TB': '6-3',
+            'ARI': '3-6', 'LAR': '7-2', 'SEA': '7-2', 'SF': '6-4'
         };
         
         const divisionsByStandings = {
@@ -763,8 +855,43 @@
             'NYG': {rank: 15, wins: 2, losses: 15, divWins: 1, divLosses: 5},
             'LAR': {rank: 16, wins: 2, losses: 15, divWins: 0, divLosses: 6}
         };
+
+        const midseasonPredictions = {
+            'IND': {rank: 1, wins: 13, losses: 4},
+            'BUF': {rank: 2, wins: 13, losses: 4},
+            'KC': {rank: 3, wins: 12, losses: 5},
+            'BAL': {rank: 4, wins: 10, losses: 7},
+            'LAC': {rank: 5, wins: 12, losses: 5},
+            'NE': {rank: 6, wins: 12, losses: 5},
+            'DEN': {rank: 7, wins: 11, losses: 6},
+            'CIN': {rank: 8, wins: 9, losses: 8},
+            'JAX': {rank: 9, wins: 9, losses: 8},
+            'HOU': {rank: 10, wins: 7, losses: 10},
+            'PIT': {rank: 11, wins: 6, losses: 11},
+            'LV': {rank: 12, wins: 5, losses: 12},
+            'CLE': {rank: 13, wins: 5, losses: 12},
+            'MIA': {rank: 14, wins: 5, losses: 12},
+            'NYJ': {rank: 15, wins: 4, losses: 13},
+            'TEN': {rank: 16, wins: 3, losses: 14},
+            'LAR': {rank: 1, wins: 13, losses: 4},
+            'DET': {rank: 2, wins: 12, losses: 5},
+            'PHI': {rank: 3, wins: 12, losses: 5},
+            'TB': {rank: 4, wins: 12, losses: 5},
+            'SEA': {rank: 5, wins: 13, losses: 4},
+            'GB': {rank: 6, wins: 10, losses: 6, ties: 1},
+            'ATL': {rank: 7, wins: 10, losses: 7},
+            'CHI': {rank: 8, wins: 10, losses: 7},
+            'MIN': {rank: 9, wins: 9, losses: 8},
+            'DAL': {rank: 10, wins: 8, losses: 8, ties: 1},
+            'SF': {rank: 11, wins: 8, losses: 9},
+            'CAR': {rank: 12, wins: 5, losses: 12},
+            'ARI': {rank: 13, wins: 4, losses: 13},
+            'NO': {rank: 14, wins: 3, losses: 14},
+            'NYG': {rank: 15, wins: 3, losses: 14},
+            'WAS': {rank: 16, wins: 3, losses: 14}
+        };
         
-        const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         let highlightedTeams = new Set();
         let canvas, ctx;
         let chartData = {};
@@ -785,11 +912,21 @@
                         initChart();
                     }
                 }, 100);
-            } else {
+            } else if (tabName === 'predictions') {
                 document.getElementById('predictions-tab').classList.add('active');
                 document.querySelectorAll('.tab-button')[1].classList.add('active');
                 window.location.hash = 'predictions';
                 renderPredictions();
+            } else if (tabName === 'midseason') {
+                document.getElementById('midseason-tab').classList.add('active');
+                document.querySelectorAll('.tab-button')[2].classList.add('active');
+                window.location.hash = 'midseason';
+                renderMidseasonPredictions();
+            } else if (tabName === 'comparison') {
+                document.getElementById('comparison-tab').classList.add('active');
+                document.querySelectorAll('.tab-button')[3].classList.add('active');
+                window.location.hash = 'comparison';
+                renderComparison();
             }
         }
 
@@ -904,6 +1041,201 @@
             
             return card;
         }
+
+        function renderMidseasonPredictions() {
+            const container = document.getElementById('midseason-container');
+            container.innerHTML = '';
+
+            const row = document.createElement('div');
+            row.className = 'predictions-row';
+            
+            const allDivisions = [
+                'AFC East', 'AFC North', 'AFC South', 'AFC West',
+                'NFC East', 'NFC North', 'NFC South', 'NFC West'
+            ];
+            
+            allDivisions.forEach((divName, index) => {
+                const card = createMidseasonDivisionCard(divName);
+                card.classList.add(`div-${index + 1}`);
+                row.appendChild(card);
+            });
+            
+            container.appendChild(row);
+        }
+
+        function createMidseasonDivisionCard(divName) {
+            const card = document.createElement('div');
+            card.className = 'division-card';
+            
+            const title = document.createElement('div');
+            title.className = 'division-card-title';
+            title.textContent = divName;
+            card.appendChild(title);
+            
+            const table = document.createElement('table');
+            table.className = 'pred-table';
+            
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Pred</th>
+                    <th>Cur</th>
+                    <th>Status</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+            
+            const tbody = document.createElement('tbody');
+            
+            const divTeams = divisions[divName];
+            divTeams.sort((a, b) => midseasonPredictions[a].rank - midseasonPredictions[b].rank);
+            
+            divTeams.forEach(team => {
+                const pred = midseasonPredictions[team];
+                const current = parseRecord(standingsRecords[team]);
+                const status = getStatusMidseason(team, current, pred);
+                const isPlayoffTeam = pred.wins >= 10;
+                
+                const tr = document.createElement('tr');
+
+                const rankDisplay = isPlayoffTeam ? `${pred.rank}*` : pred.rank;
+                const predRecord = pred.ties ? `${pred.wins}-${pred.losses}-${pred.ties}` : `${pred.wins}-${pred.losses}`;
+
+                tr.innerHTML = `
+                    <td class="rank-col">${rankDisplay}</td>
+                    <td>
+                        <img src="${LOGO_BASE}${team}.png" class="team-logo" alt="${team}">
+                        ${team}
+                    </td>
+                    <td>${predRecord}</td>
+                    <td>${standingsRecords[team]}</td>
+                    <td class="${status.class}"><span class="status-badge status-${status.badge}">${status.text}</span></td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            card.appendChild(table);
+            
+            return card;
+        }
+
+        function getStatusMidseason(team, current, predicted) {
+            const gamesPlayed = current.wins + current.losses + current.ties;
+            const gamesRemaining = 17 - gamesPlayed;
+            
+            const currentWinPct = (current.wins + current.ties * 0.5) / gamesPlayed;
+            const projectedWins = current.wins + (gamesRemaining * currentWinPct);
+            const diff = projectedWins - predicted.wins;
+            
+            const maxPossibleWins = current.wins + gamesRemaining;
+            if (maxPossibleWins < predicted.wins) {
+                return {class: 'eliminated', badge: 'way-behind', text: 'Off Track'};
+            }
+            
+            if (diff >= 2) {
+                return {class: 'ahead-pace', badge: 'ahead', text: 'Ahead'};
+            } else if (diff >= -1 && diff < 2) {
+                return {class: 'on-track', badge: 'on-track', text: 'On Track'};
+            } else if (diff >= -3 && diff < -1) {
+                return {class: 'behind-pace', badge: 'behind', text: 'Behind'};
+            } else {
+                return {class: 'eliminated', badge: 'way-behind', text: 'Off Track'};
+            }
+        }
+
+        function renderComparison() {
+            const container = document.getElementById('comparison-container');
+            container.innerHTML = '';
+
+            const row = document.createElement('div');
+            row.className = 'predictions-row';
+            
+            const allDivisions = [
+                'AFC East', 'AFC North', 'AFC South', 'AFC West',
+                'NFC East', 'NFC North', 'NFC South', 'NFC West'
+            ];
+            
+            allDivisions.forEach((divName, index) => {
+                const card = createComparisonDivisionCard(divName);
+                card.classList.add(`div-${index + 1}`);
+                row.appendChild(card);
+            });
+            
+            container.appendChild(row);
+        }
+
+        function createComparisonDivisionCard(divName) {
+            const card = document.createElement('div');
+            card.className = 'division-card';
+            
+            const title = document.createElement('div');
+            title.className = 'division-card-title';
+            title.textContent = divName;
+            card.appendChild(title);
+            
+            const table = document.createElement('table');
+            table.className = 'comparison-table';
+            
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th rowspan="2">Team</th>
+                    <th colspan="2">Preseason</th>
+                    <th colspan="2">Midseason</th>
+                    <th rowspan="2">Current</th>
+                </tr>
+                <tr>
+                    <th>Rank</th>
+                    <th>Pred</th>
+                    <th>Rank</th>
+                    <th>Pred</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+            
+            const tbody = document.createElement('tbody');
+            
+            const divTeams = divisionsByStandings[divName];
+            
+            divTeams.forEach(team => {
+                const preseason = predictions[team];
+                const midseason = midseasonPredictions[team];
+                const current = parseRecord(standingsRecords[team]);
+                
+                const tr = document.createElement('tr');
+
+                const preseasonRecord = `${preseason.wins}-${preseason.losses}`;
+                const midseasonRecord = midseason.ties ? `${midseason.wins}-${midseason.losses}-${midseason.ties}` : `${midseason.wins}-${midseason.losses}`;
+                
+                // Calculate deltas
+                const rankDelta = preseason.rank - midseason.rank;
+                const rankDeltaClass = rankDelta > 0 ? 'delta-positive' : (rankDelta < 0 ? 'delta-negative' : 'delta-neutral');
+                const rankDeltaText = rankDelta > 0 ? `↑${rankDelta}` : (rankDelta < 0 ? `↓${Math.abs(rankDelta)}` : '−');
+
+                tr.innerHTML = `
+                    <td>
+                        <img src="${LOGO_BASE}${team}.png" class="team-logo" alt="${team}">
+                        ${team}
+                    </td>
+                    <td class="rank-col">${preseason.rank}</td>
+                    <td>${preseasonRecord}</td>
+                    <td class="rank-col"><span class="${rankDeltaClass}">${midseason.rank}</span></td>
+                    <td>${midseasonRecord}</td>
+                    <td><strong>${standingsRecords[team]}</strong></td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            card.appendChild(table);
+            
+            return card;
+        }
         
         function preloadLogos() {
             Object.keys(teamNames).forEach(team => {
@@ -932,6 +1264,10 @@
             const hash = window.location.hash.substring(1);
             if (hash === 'predictions') {
                 switchTab('predictions');
+            } else if (hash === 'midseason') {
+                switchTab('midseason');
+            } else if (hash === 'comparison') {
+                switchTab('comparison');
             }
         }
 
@@ -1200,7 +1536,7 @@
             const legend = document.getElementById('legend');
             legend.innerHTML = '';
             
-            const week10Rankings = rankings[10];
+            const week11Rankings = rankings[11];
             
             Object.keys(divisionsByStandings).forEach(divisionName => {
                 const divisionSection = document.createElement('div');
@@ -1242,7 +1578,7 @@
                     
                     item.appendChild(teamInfo);
                     
-                    const currentRank = week10Rankings.indexOf(team) + 1;
+                    const currentRank = week11Rankings.indexOf(team) + 1;
                     const rankBadge = document.createElement('div');
                     rankBadge.className = `rank-badge ${getRankTier(currentRank)}`;
                     rankBadge.textContent = `#${currentRank}`;
