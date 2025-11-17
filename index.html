@@ -428,15 +428,18 @@
         .delta-positive {
             color: #4a7c24;
             font-weight: bold;
+            font-size: 10px;
         }
 
         .delta-negative {
             color: #a63c3c;
             font-weight: bold;
+            font-size: 10px;
         }
 
         .delta-neutral {
             color: #6b705c;
+            font-size: 10px;
         }
 
         .legend-predictions {
@@ -574,6 +577,10 @@
                 width: 18px;
                 height: 18px;
             }
+
+            .delta-positive, .delta-negative, .delta-neutral {
+                font-size: 9px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -689,6 +696,10 @@
                 width: 16px;
                 height: 16px;
             }
+
+            .delta-positive, .delta-negative, .delta-neutral {
+                font-size: 7px;
+            }
         }
     </style>
 </head>
@@ -741,7 +752,12 @@
             
             <div class="legend-predictions">
                 <div style="text-align: center; font-size: 14px; color: #2d5016;">
-                    Preseason → Midseason → Current Standings Comparison
+                    Current Standings vs Preseason vs Midseason Predictions<br>
+                    <span style="font-size: 12px; color: #6b705c;">
+                        <span class="delta-positive" style="font-size: 14px;">↑</span> = Rank improved in midseason predictions &nbsp;|&nbsp; 
+                        <span class="delta-negative" style="font-size: 14px;">↓</span> = Rank declined in midseason predictions &nbsp;|&nbsp; 
+                        <span class="delta-neutral" style="font-size: 14px;">−</span> = No rank change
+                    </span>
                 </div>
             </div>
         </div>
@@ -1184,11 +1200,13 @@
             thead.innerHTML = `
                 <tr>
                     <th rowspan="2">Team</th>
+                    <th colspan="2">Current</th>
                     <th colspan="2">Preseason</th>
                     <th colspan="2">Midseason</th>
-                    <th rowspan="2">Current</th>
                 </tr>
                 <tr>
+                    <th>Seed</th>
+                    <th>Rec</th>
                     <th>Rank</th>
                     <th>Pred</th>
                     <th>Rank</th>
@@ -1205,27 +1223,35 @@
                 const preseason = predictions[team];
                 const midseason = midseasonPredictions[team];
                 const current = parseRecord(standingsRecords[team]);
+                const currentSeed = getConferenceSeed(team);
                 
                 const tr = document.createElement('tr');
 
                 const preseasonRecord = `${preseason.wins}-${preseason.losses}`;
                 const midseasonRecord = midseason.ties ? `${midseason.wins}-${midseason.losses}-${midseason.ties}` : `${midseason.wins}-${midseason.losses}`;
                 
-                // Calculate deltas
+                // Calculate rank delta from preseason to midseason
                 const rankDelta = preseason.rank - midseason.rank;
-                const rankDeltaClass = rankDelta > 0 ? 'delta-positive' : (rankDelta < 0 ? 'delta-negative' : 'delta-neutral');
-                const rankDeltaText = rankDelta > 0 ? `↑${rankDelta}` : (rankDelta < 0 ? `↓${Math.abs(rankDelta)}` : '−');
+                let rankDeltaDisplay = '';
+                if (rankDelta > 0) {
+                    rankDeltaDisplay = `${midseason.rank} <span class="delta-positive">↑${rankDelta}</span>`;
+                } else if (rankDelta < 0) {
+                    rankDeltaDisplay = `${midseason.rank} <span class="delta-negative">↓${Math.abs(rankDelta)}</span>`;
+                } else {
+                    rankDeltaDisplay = `${midseason.rank} <span class="delta-neutral">−</span>`;
+                }
 
                 tr.innerHTML = `
                     <td>
                         <img src="${LOGO_BASE}${team}.png" class="team-logo" alt="${team}">
                         ${team}
                     </td>
+                    <td class="rank-col">${currentSeed}</td>
+                    <td><strong>${standingsRecords[team]}</strong></td>
                     <td class="rank-col">${preseason.rank}</td>
                     <td>${preseasonRecord}</td>
-                    <td class="rank-col"><span class="${rankDeltaClass}">${midseason.rank}</span></td>
+                    <td class="rank-col">${rankDeltaDisplay}</td>
                     <td>${midseasonRecord}</td>
-                    <td><strong>${standingsRecords[team]}</strong></td>
                 `;
                 
                 tbody.appendChild(tr);
@@ -1235,6 +1261,27 @@
             card.appendChild(table);
             
             return card;
+        }
+
+        function getConferenceSeed(team) {
+            const afcTeams = ['BUF', 'MIA', 'NE', 'NYJ', 'BAL', 'CIN', 'CLE', 'PIT', 'HOU', 'IND', 'JAX', 'TEN', 'DEN', 'KC', 'LAC', 'LV'];
+            const isAFC = afcTeams.includes(team);
+            
+            // Get all teams in conference with their records
+            const conferenceTeams = Object.keys(standingsRecords)
+                .filter(t => isAFC ? afcTeams.includes(t) : !afcTeams.includes(t))
+                .map(t => {
+                    const record = parseRecord(standingsRecords[t]);
+                    const winPct = (record.wins + record.ties * 0.5) / (record.wins + record.losses + record.ties);
+                    return { team: t, wins: record.wins, losses: record.losses, ties: record.ties, winPct };
+                })
+                .sort((a, b) => {
+                    if (b.winPct !== a.winPct) return b.winPct - a.winPct;
+                    return b.wins - a.wins;
+                });
+            
+            const seed = conferenceTeams.findIndex(t => t.team === team) + 1;
+            return seed;
         }
         
         function preloadLogos() {
