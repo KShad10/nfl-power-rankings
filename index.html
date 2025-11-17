@@ -442,6 +442,126 @@
             font-size: 10px;
         }
 
+        .movers-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 1600px;
+            margin: 20px auto 0;
+        }
+
+        .movers-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 2px solid #c8553d;
+        }
+
+        .movers-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d5016;
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #c8553d;
+        }
+
+        .movers-subtitle {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            padding: 5px;
+            background: #f5e6d3;
+            border-radius: 5px;
+        }
+
+        .movers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        .movers-table th {
+            background: #2d5016;
+            color: #f5e6d3;
+            padding: 6px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #c8553d;
+        }
+
+        .movers-table td {
+            padding: 6px 8px;
+            text-align: center;
+            border: 1px solid #ede0c8;
+            font-size: 12px;
+        }
+
+        .movers-table .team-logo {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .movers-improved {
+            background: #d4edda;
+        }
+
+        .movers-declined {
+            background: #f8d7da;
+        }
+
+        @media (max-width: 768px) {
+            .movers-container {
+                grid-template-columns: 1fr;
+            }
+
+            .movers-title {
+                font-size: 14px;
+            }
+
+            .movers-subtitle {
+                font-size: 12px;
+            }
+
+            .movers-table th, .movers-table td {
+                padding: 5px 4px;
+                font-size: 10px;
+            }
+
+            .movers-table .team-logo {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movers-title {
+                font-size: 12px;
+            }
+
+            .movers-subtitle {
+                font-size: 11px;
+                margin-top: 10px;
+            }
+
+            .movers-table th, .movers-table td {
+                padding: 4px 2px;
+                font-size: 9px;
+            }
+
+            .movers-table .team-logo {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
         .legend-predictions {
             background: #ffffff;
             border-radius: 10px;
@@ -1182,6 +1302,20 @@
             });
             
             container.appendChild(row);
+
+            // Add movers section
+            const moversContainer = document.createElement('div');
+            moversContainer.className = 'movers-container';
+            
+            // AFC Movers
+            const afcMovers = createMoversCard('AFC');
+            moversContainer.appendChild(afcMovers);
+            
+            // NFC Movers
+            const nfcMovers = createMoversCard('NFC');
+            moversContainer.appendChild(nfcMovers);
+            
+            container.appendChild(moversContainer);
         }
 
         function createComparisonDivisionCard(divName) {
@@ -1282,6 +1416,117 @@
             
             const seed = conferenceTeams.findIndex(t => t.team === team) + 1;
             return seed;
+        }
+
+        function createMoversCard(conference) {
+            const card = document.createElement('div');
+            card.className = 'movers-card';
+            
+            const title = document.createElement('div');
+            title.className = 'movers-title';
+            title.textContent = `${conference} Biggest Movers (Preseason → Midseason)`;
+            card.appendChild(title);
+            
+            const afcTeams = ['BUF', 'MIA', 'NE', 'NYJ', 'BAL', 'CIN', 'CLE', 'PIT', 'HOU', 'IND', 'JAX', 'TEN', 'DEN', 'KC', 'LAC', 'LV'];
+            
+            // Get all teams in conference with rank changes
+            const conferenceTeams = Object.keys(predictions)
+                .filter(team => conference === 'AFC' ? afcTeams.includes(team) : !afcTeams.includes(team))
+                .map(team => {
+                    const preseason = predictions[team];
+                    const midseason = midseasonPredictions[team];
+                    const rankDelta = preseason.rank - midseason.rank;
+                    return {
+                        team,
+                        preseasonRank: preseason.rank,
+                        midseasonRank: midseason.rank,
+                        rankDelta
+                    };
+                });
+            
+            // Get top 3 improved (positive delta)
+            const improved = conferenceTeams
+                .filter(t => t.rankDelta > 0)
+                .sort((a, b) => b.rankDelta - a.rankDelta)
+                .slice(0, 3);
+            
+            // Get top 3 declined (negative delta)
+            const declined = conferenceTeams
+                .filter(t => t.rankDelta < 0)
+                .sort((a, b) => a.rankDelta - b.rankDelta)
+                .slice(0, 3);
+            
+            // Improved section
+            if (improved.length > 0) {
+                const improvedSubtitle = document.createElement('div');
+                improvedSubtitle.className = 'movers-subtitle';
+                improvedSubtitle.textContent = 'Most Improved';
+                card.appendChild(improvedSubtitle);
+                
+                const improvedTable = document.createElement('table');
+                improvedTable.className = 'movers-table';
+                improvedTable.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Preseason Rank</th>
+                            <th>Midseason Rank</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${improved.map(t => `
+                            <tr class="movers-improved">
+                                <td>
+                                    <img src="${LOGO_BASE}${t.team}.png" class="team-logo" alt="${t.team}">
+                                    ${teamNames[t.team]}
+                                </td>
+                                <td>${t.preseasonRank}</td>
+                                <td>${t.midseasonRank}</td>
+                                <td><span class="delta-positive">↑${t.rankDelta}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                card.appendChild(improvedTable);
+            }
+            
+            // Declined section
+            if (declined.length > 0) {
+                const declinedSubtitle = document.createElement('div');
+                declinedSubtitle.className = 'movers-subtitle';
+                declinedSubtitle.textContent = 'Most Declined';
+                card.appendChild(declinedSubtitle);
+                
+                const declinedTable = document.createElement('table');
+                declinedTable.className = 'movers-table';
+                declinedTable.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Preseason Rank</th>
+                            <th>Midseason Rank</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${declined.map(t => `
+                            <tr class="movers-declined">
+                                <td>
+                                    <img src="${LOGO_BASE}${t.team}.png" class="team-logo" alt="${t.team}">
+                                    ${teamNames[t.team]}
+                                </td>
+                                <td>${t.preseasonRank}</td>
+                                <td>${t.midseasonRank}</td>
+                                <td><span class="delta-negative">↓${Math.abs(t.rankDelta)}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                card.appendChild(declinedTable);
+            }
+            
+            return card;
         }
         
         function preloadLogos() {
